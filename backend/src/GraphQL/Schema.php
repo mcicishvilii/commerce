@@ -33,6 +33,22 @@ class Schema
                         return array_column($images, 'image_url');
                     }
                 ],
+                'price' => [
+                    'type' => Type::float(),
+                    'resolve' => function ($product) {
+                        $priceModel = new \App\Models\Price();
+                        $price = $priceModel->getForProduct($product['id']);
+                        return $price ? $price['amount'] : null;
+                    }
+                ],
+                'currency' => [
+                    'type' => Type::string(),
+                    'resolve' => function ($product) {
+                        $priceModel = new \App\Models\Price();
+                        $price = $priceModel->getForProduct($product['id']);
+                        return $price ? $price['currency_label'] : null;
+                    }
+                ],
                 'category' => [
                     'type' => self::categoryType(),
                     'resolve' => function ($product) {

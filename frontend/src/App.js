@@ -28,6 +28,8 @@ const App = () => {
                             in_stock
                             description
                             brand
+                            price
+                            currency
                             category {
                                 name
                             }
@@ -90,15 +92,15 @@ const App = () => {
                 ))}
             </div>
             {isOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          zIndex: 999
-        }} onClick={() => toggleCart()} />
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    zIndex: 999
+            }} onClick={() => toggleCart()} />
       )}
 
             <h1>{selectedCategory ? selectedCategory : 'All Products'}</h1>
@@ -110,6 +112,9 @@ const App = () => {
                         <p>Category: {product.category.name}</p>
                         <p>In Stock: {product.in_stock ? 'Yes' : 'No'}</p>
                         <p>{product.description}</p>
+                        {product.price && product.currency && (
+                        <p>Price: {product.price} {product.currency}</p>
+                        )}
                         {product.gallery && product.gallery.length > 0 && (
                             <img src={product.gallery[0]} alt={product.name} style={{width: '100%', height: '200px', objectFit: 'cover'}} />
                         )}
