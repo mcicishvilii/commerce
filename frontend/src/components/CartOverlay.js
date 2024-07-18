@@ -66,7 +66,7 @@ const CartOverlay = () => {
         </div>
       ))}
       <h3>Total: ${cartTotal.toFixed(2)}</h3>
-      <button onClick={clearCart} disabled={cart.length === 0}>Place Order</button>
+      <button onClick={clearCart} disabled={cart.length === 0}>Clean Cart</button>
       <button onClick={placeOrder} disabled={cart.length === 0}>Place Order</button>
     </div>
   );
