@@ -8,13 +8,9 @@ const App = () => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
-
-
-    //test 
-    // comments
+    const { isOpen, toggleCart  } = useCart();
 
     useEffect(() => {
-
         fetchProducts();
         fetchCategories();
     }, []);
@@ -93,6 +89,18 @@ const App = () => {
                     </button>
                 ))}
             </div>
+            {isOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          zIndex: 999
+        }} onClick={() => toggleCart()} />
+      )}
+
             <h1>{selectedCategory ? selectedCategory : 'All Products'}</h1>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
                 {products.map((product) => (

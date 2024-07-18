@@ -6,12 +6,15 @@ namespace App\GraphQL;
 use GraphQL\Type\Schema as GraphQLSchema;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\InputObjectType;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductGallery;
 
 class Schema
 {
+    private static $categoryType = null;
+
     public static function buildSchema()
     {
         $productType = new ObjectType([
@@ -38,7 +41,6 @@ class Schema
                     }
                 ],
             ]
-            
         ]);
 
         return new GraphQLSchema([
@@ -70,18 +72,42 @@ class Schema
                     ]
                 ]
             ]),
-            
+            'mutation' => new ObjectType([
+                'name' => 'Mutation',
+                'fields' => [
+                    'placeOrder' => [
+                        'type' => Type::boolean(),
+                        'args' => [
+                            'items' => Type::nonNull(Type::listOf(Type::nonNull(new InputObjectType([
+                                'name' => 'OrderItem',
+                                'fields' => [
+                                    'productId' => Type::nonNull(Type::int()),
+                                    'quantity' => Type::nonNull(Type::int()),
+                                    'options' => Type::string()
+                                ]
+                            ]))))
+                        ],
+                        'resolve' => function ($root, $args) {
+                            $order = new \App\Models\Order();
+                            return $order->create($args['items']);
+                        }
+                    ]
+                ]
+            ])
         ]);
     }
 
     private static function categoryType()
     {
-        return new ObjectType([
-            'name' => 'Category',
-            'fields' => [
-                'id' => Type::int(),
-                'name' => Type::string(),
-            ]
-        ]);
+        if (self::$categoryType === null) {
+            self::$categoryType = new ObjectType([
+                'name' => 'Category',
+                'fields' => [
+                    'id' => Type::int(),
+                    'name' => Type::string(),
+                ]
+            ]);
+        }
+        return self::$categoryType;
     }
 }

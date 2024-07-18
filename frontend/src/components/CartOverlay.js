@@ -10,6 +10,36 @@ const CartOverlay = () => {
   const total = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartTotal = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
+
+  const placeOrder = async () => {
+    const response = await fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `
+          mutation PlaceOrder($items: [OrderItem!]!) {
+            placeOrder(items: $items)
+          }
+        `,
+        variables: {
+          items: cart.map(item => ({
+            productId: item.id,
+            quantity: item.quantity,
+            options: JSON.stringify(item.options)
+          }))
+        }
+      }),
+    });
+
+    const data = await response.json();
+    if (data.data.placeOrder) {
+      alert('Order placed successfully!');
+      clearCart();
+    } else {
+      alert('Failed to place order. Please try again.');
+    }
+  };
+
   return (
     <div style={{
       position: 'fixed',
@@ -37,6 +67,7 @@ const CartOverlay = () => {
       ))}
       <h3>Total: ${cartTotal.toFixed(2)}</h3>
       <button onClick={clearCart} disabled={cart.length === 0}>Place Order</button>
+      <button onClick={placeOrder} disabled={cart.length === 0}>Place Order</button>
     </div>
   );
 };
