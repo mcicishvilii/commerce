@@ -13,10 +13,19 @@ class DatabaseConnection
 
     private function __construct()
     {
+
+        //for localhost
         $host = "localhost";
         $dbname = "mishosdb";
         $user = "root";
         $password = "123456";
+
+
+        //for real server
+        // $host = "sql108.infinityfree.com";
+        // $dbname = "if0_36929970_mydb";
+        // $user = "if0_36929970";
+        // $password = "Pw4KiZ0A6C8";
 
         if (!$host || !$dbname || !$user) {
             throw new \Exception("Database configuration is incomplete. Please check your environment variables.");
