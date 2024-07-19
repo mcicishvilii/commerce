@@ -8,7 +8,7 @@ const App = () => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const { isOpen, toggleCart  } = useCart();
+    const { isOpen, toggleCart } = useCart();
 
     useEffect(() => {
         fetchProducts();
@@ -71,22 +71,26 @@ const App = () => {
         fetchProducts(category === "all" ? null : category);
     };
 
+    const handleProductClick = (product) => {
+        alert(`Moved to details of ${product.name}`);
+    };
+
     return (
-        <div style={{ paddingLeft: '80px', paddingRight: '80px' }} >
+        <div style={{ paddingLeft: '80px', paddingRight: '80px' }}>
             <Header />
             <CartOverlay />
             <div style={{ display: 'flex', gap: '10px', margin: '20px' }}>
                 {categories.map((category) => (
-                    <button 
-                    style={{
-                        padding: '10px',
-                        backgroundColor: 'transparent',
-                        color: '#000',
-                        border: 'none',
-                        borderBottom: selectedCategory === category.name ? '2px solid green' : 'none',
-                        cursor: 'pointer',
-                    }}
-                    key={category.id} onClick={() => handleCategoryClick(category.name)}>
+                    <button
+                        style={{
+                            padding: '10px',
+                            backgroundColor: 'transparent',
+                            color: '#000',
+                            border: 'none',
+                            borderBottom: selectedCategory === category.name ? '2px solid green' : 'none',
+                            cursor: 'pointer',
+                        }}
+                        key={category.id} onClick={() => handleCategoryClick(category.name)}>
                         {category.name}
                     </button>
                 ))}
@@ -100,25 +104,63 @@ const App = () => {
                     bottom: 0,
                     backgroundColor: 'rgba(0,0,0,0.5)',
                     zIndex: 999
-            }} onClick={() => toggleCart()} />
-      )}
+                }} onClick={() => toggleCart()} />
+            )}
 
             <h1>{selectedCategory ? selectedCategory : 'All Products'}</h1>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
                 {products.map((product) => (
-                    <div key={product.id}>
+                    <div
+                        key={product.id}
+                        onClick={() => handleProductClick(product)}
+                        style={{
+                            cursor: 'pointer',
+                            border: '1px solid #ccc',
+                            padding: '10px',
+                            borderRadius: '5px',
+                            textAlign: 'center',
+                            position: 'relative'
+                        }}
+                    >
+                        <div style={{ position: 'relative' }}>
+                            <img
+                                src={product.gallery[0]}
+                                alt={product.name}
+                                style={{
+                                    width: '100%',
+                                    height: '200px',
+                                    objectFit: 'cover',
+                                    filter: product.in_stock ? 'none' : 'grayscale(100%)',
+                                }}
+                            />
+                            {!product.in_stock && (
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                    color: 'white',
+                                    fontSize: '1.5em',
+                                }}>
+                                    Out of Stock
+                                </div>
+                            )}
+                        </div>
                         <h2>{product.name}</h2>
-                        <p>Brand: {product.brand}</p>
-                        <p>Category: {product.category.name}</p>
-                        <p>In Stock: {product.in_stock ? 'Yes' : 'No'}</p>
-                        <p>{product.description}</p>
-                        {product.price && product.currency && (
                         <p>Price: {product.price} {product.currency}</p>
+                        {product.in_stock && (
+                            <button onClick={(e) => {
+                                e.stopPropagation();
+                                addToCart(product, {});
+                            }}>
+                                Add to Cart
+                            </button>
                         )}
-                        {product.gallery && product.gallery.length > 0 && (
-                            <img src={product.gallery[0]} alt={product.name} style={{width: '100%', height: '200px', objectFit: 'cover'}} />
-                        )}
-                        <button onClick={() => addToCart(product, {})}>Add to Cart</button>
                     </div>
                 ))}
             </div>
