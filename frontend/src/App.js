@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import CartOverlay from './components/CartOverlay';
 import { useCart } from './CartContext';
+import cartIcon from './assets/green-shopping-cart-10909.png';  // Import the cart icon
 
 const App = () => {
     const { addToCart } = useCart();
@@ -154,11 +155,27 @@ const App = () => {
                         <h2>{product.name}</h2>
                         <p>Price: {product.price} {product.currency}</p>
                         {product.in_stock && (
-                            <button onClick={(e) => {
-                                e.stopPropagation();
-                                addToCart(product, {});
-                            }}>
-                                Add to Cart
+                            <button 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    addToCart(product, {});
+                                }}
+                                style={{
+                                    position: 'absolute',
+                                    bottom: '10px',
+                                    right: '10px',
+                                    backgroundColor: 'transparent',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    width: '40px',
+                                    height: '40px',
+                                    borderRadius: '50%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <img src={cartIcon} alt="Add to Cart" style={{ width: '24px', height: '24px' }} />
                             </button>
                         )}
                     </div>
