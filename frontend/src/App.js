@@ -16,6 +16,10 @@ const App = () => {
         fetchCategories();
     }, []);
 
+    const handleProductClick = (product) => {
+        window.location.href = `/product/${product.id}`;
+    };
+
     const fetchProducts = async (category = null) => {
         const response = await fetch('http://localhost:8000/graphql', {
             method: 'POST',
@@ -70,10 +74,6 @@ const App = () => {
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
         fetchProducts(category === "all" ? null : category);
-    };
-
-    const handleProductClick = (product) => {
-        alert(`Moved to details of ${product.name}`);
     };
 
     return (

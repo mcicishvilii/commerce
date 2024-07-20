@@ -56,6 +56,16 @@ class Schema
                         return $category->find($product['category_id']);
                     }
                 ],
+                'product' => [
+                    'type' => $productType,
+                    'args' => [
+                        'id' => Type::nonNull(Type::int())
+                    ],
+                    'resolve' => function ($root, $args) {
+                        $product = new Product();
+                        return $product->find($args['id']);
+                    }
+                ]
             ]
         ]);
 
