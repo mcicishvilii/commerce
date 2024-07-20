@@ -2,153 +2,130 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useCart } from '../CartContext';
 
-const ProductDetails = () => {
-    const { productId } = useParams();
-    const { addToCart } = useCart();
+const ProductDetailsScreen = () => {
+    const { id } = useParams();
     const [product, setProduct] = useState(null);
-    const [selectedAttributes, setSelectedAttributes] = useState({});
-    const [mainImageIndex, setMainImageIndex] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { addToCart } = useCart();
+    const [selectedOptions, setSelectedOptions] = useState({});
 
     useEffect(() => {
-        fetchProductDetails(productId);
-    }, [productId]);
+        fetchProductDetails();
+    }, [id]);
 
-    const fetchProductDetails = async (id) => {
-        const response = await fetch('http://localhost:8000/graphql', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                query: `
-                    query {
-                        product(id: ${id}) {
-                            id
-                            name
-                            description
-                            price
-                            currency
-                            gallery
-                            attributes {
+    const fetchProductDetails = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch('http://localhost:8000/graphql', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    query: `
+                        query($id: Int!) {
+                            product(id: $id) {
+                                id
                                 name
-                                type
-                                items {
-                                    value
-                                    displayValue
+                                in_stock
+                                description
+                                brand
+                                price
+                                currency
+                                gallery
+                                category {
+                                    name
+                                }
+                                attributes {
+                                    id
+                                    name
+                                    type
+                                    items {
+                                        displayValue
+                                        value
+                                        id
+                                    }
                                 }
                             }
                         }
-                    }
-                `,
-            }),
-        });
-        const data = await response.json();
-        if (data.data.product) {
-            setProduct(data.data.product);
+                    `,
+                    variables: { id: parseInt(id) }
+                }),
+            });
+            const data = await response.json();
+            if (data.data && data.data.product) {
+                setProduct(data.data.product);
+            } else {
+                setError('Product not found');
+            }
+        } catch (err) {
+            setError('An error occurred while fetching the product');
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleAttributeChange = (attributeName, itemValue) => {
-        setSelectedAttributes((prev) => ({
+    const handleOptionChange = (attributeId, value) => {
+        setSelectedOptions(prev => ({
             ...prev,
-            [attributeName]: itemValue,
+            [attributeId]: value
         }));
     };
 
-    const handleAddToCart = () => {
-        addToCart(product, selectedAttributes);
-    };
-
-    if (!product) {
+    if (loading) {
         return <div>Loading...</div>;
     }
 
-    const allAttributesSelected = product.attributes.every(
-        (attr) => selectedAttributes[attr.name]
-    );
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    if (!product) {
+        return <div>Product not found</div>;
+    }
 
     return (
-        <div>
-            <div data-testid="product-gallery">
-                <div>
-                    {product.gallery.map((image, index) => (
-                        <img
-                            key={index}
-                            src={image}
-                            alt={`Product image ${index + 1}`}
-                            style={{
-                                width: '50px',
-                                height: '50px',
-                                objectFit: 'cover',
-                                cursor: 'pointer',
-                                border: index === mainImageIndex ? '2px solid green' : 'none'
-                            }}
-                            onClick={() => setMainImageIndex(index)}
-                        />
-                    ))}
-                </div>
-                <div>
-                    <img
-                        src={product.gallery[mainImageIndex]}
-                        alt={`Main product image`}
-                        style={{ width: '400px', height: '400px', objectFit: 'cover' }}
-                    />
-                </div>
-            </div>
+        <div className="product-details">
             <h1>{product.name}</h1>
-            <div>
-                {product.attributes.map((attr) => (
-                    <div key={attr.name} data-testid={`product-attribute-${attr.name.toLowerCase().replace(/\s+/g, '-')}`}>
-                        <h3>{attr.name}</h3>
-                        {attr.type === 'swatch' ? (
-                            attr.items.map((item) => (
-                                <button
-                                    key={item.value}
-                                    style={{
-                                        backgroundColor: item.value,
-                                        width: '30px',
-                                        height: '30px',
-                                        border: selectedAttributes[attr.name] === item.value ? '2px solid black' : '1px solid #ccc',
-                                        cursor: 'pointer',
-                                    }}
-                                    onClick={() => handleAttributeChange(attr.name, item.value)}
-                                ></button>
-                            ))
-                        ) : (
-                            attr.items.map((item) => (
-                                <button
-                                    key={item.value}
-                                    style={{
-                                        padding: '10px',
-                                        backgroundColor: selectedAttributes[attr.name] === item.value ? 'green' : 'transparent',
-                                        border: '1px solid #ccc',
-                                        cursor: 'pointer',
-                                    }}
-                                    onClick={() => handleAttributeChange(attr.name, item.value)}
-                                >
-                                    {item.displayValue}
-                                </button>
-                            ))
-                        )}
+            <p>{product.brand}</p>
+            <p>{product.description}</p>
+            <p>Price: {product.price} {product.currency}</p>
+            <p>Category: {product.category?.name}</p>
+            <p>{product.in_stock ? 'In Stock' : 'Out of Stock'}</p>
+            
+            <div className="product-gallery">
+                {product.gallery && product.gallery.map((image, index) => (
+                    <img key={index} src={image} alt={`${product.name} - ${index + 1}`} />
+                ))}
+            </div>
+            
+            <div className="product-attributes">
+                {product.attributes && product.attributes.map(attribute => (
+                    <div key={attribute.id}>
+                        <h3>{attribute.name}</h3>
+                        {attribute.items && attribute.items.map(item => (
+                            <button
+                                key={item.id}
+                                onClick={() => handleOptionChange(attribute.id, item.value)}
+                                style={{
+                                    border: selectedOptions[attribute.id] === item.value ? '2px solid black' : '1px solid gray',
+                                    margin: '5px',
+                                    padding: '5px'
+                                }}
+                            >
+                                {item.displayValue}
+                            </button>
+                        ))}
                     </div>
                 ))}
             </div>
-            <p>Price: {product.price.toFixed(2)} {product.currency}</p>
-            <button
-                data-testid="add-to-cart"
-                onClick={handleAddToCart}
-                disabled={!allAttributesSelected}
-                style={{
-                    backgroundColor: allAttributesSelected ? 'green' : 'grey',
-                    color: 'white',
-                    padding: '10px 20px',
-                    border: 'none',
-                    cursor: allAttributesSelected ? 'pointer' : 'not-allowed',
-                }}
-            >
-                Add to Cart
-            </button>
-            <div data-testid="product-description" dangerouslySetInnerHTML={{ __html: product.description }} />
+            
+            {product.in_stock && (
+                <button onClick={() => addToCart(product, selectedOptions)}>
+                    Add to Cart
+                </button>
+            )}
         </div>
     );
 };
 
-export default ProductDetails;
+export default ProductDetailsScreen;

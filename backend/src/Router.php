@@ -14,9 +14,9 @@ class Router
             $uri = $_SERVER['REQUEST_URI'];
             $method = $_SERVER['REQUEST_METHOD'];
 
-            // Handle the root URL
-            if ($uri === '/' || $uri === '') {
-                return ['message' => 'Welcome to the eCommerce API!'];
+            // Handle the root URL and other frontend routes
+            if ($uri === '/' || strpos($uri, '/product/') === 0) {
+                return $this->serveReactApp();
             }
 
             // Handle GraphQL requests
@@ -32,6 +32,20 @@ class Router
             error_log("Uncaught exception: " . $e->getMessage());
             http_response_code(500);
             return ['error' => 'Internal Server Error: ' . $e->getMessage()];
+        }
+    }
+
+    private function serveReactApp()
+    {
+        // Serve your React app's index.html file
+        $indexFile = __DIR__ . '/../public/index.html';
+        if (file_exists($indexFile)) {
+            header('Content-Type: text/html');
+            readfile($indexFile);
+            exit;
+        } else {
+            http_response_code(404);
+            return ['error' => 'React app not found'];
         }
     }
 

@@ -10,14 +10,17 @@ use GraphQL\Type\Definition\InputObjectType;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductGallery;
+use App\Models\ProductAttribute;
+use App\Models\ProductAttributeSet;
 
 class Schema
 {
     private static $categoryType = null;
+    private static $productType = null;
 
     public static function buildSchema()
     {
-        $productType = new ObjectType([
+        self::$productType = new ObjectType([
             'name' => 'Product',
             'fields' => [
                 'id' => Type::int(),
@@ -56,16 +59,49 @@ class Schema
                         return $category->find($product['category_id']);
                     }
                 ],
-                'product' => [
-                    'type' => $productType,
-                    'args' => [
-                        'id' => Type::nonNull(Type::int())
-                    ],
-                    'resolve' => function ($root, $args) {
-                        $product = new Product();
-                        return $product->find($args['id']);
+                'attributes' => [
+                    'type' => Type::listOf(new ObjectType([
+                        'name' => 'ProductAttribute',
+                        'fields' => [
+                            'id' => Type::int(),
+                            'name' => Type::string(),
+                            'type' => Type::string(),
+                            'items' => Type::listOf(new ObjectType([
+                                'name' => 'AttributeItem',
+                                'fields' => [
+                                    'displayValue' => Type::string(),
+                                    'value' => Type::string(),
+                                    'id' => Type::int(),
+                                ]
+                            ])),
+                        ]
+                    ])),
+                    'resolve' => function ($product) {
+                        $attributeSet = new ProductAttributeSet();
+                        $attributes = $attributeSet->getForProduct($product['id']);
+                        
+                        $result = [];
+                        foreach ($attributes as $attribute) {
+                            $attributeValues = new ProductAttribute();
+                            $values = $attributeValues->getForAttributeSet($attribute['id']);
+                            
+                            $result[] = [
+                                'id' => $attribute['id'],
+                                'name' => $attribute['name'],
+                                'type' => $attribute['type'],
+                                'items' => array_map(function($value) {
+                                    return [
+                                        'displayValue' => $value['display_value'],
+                                        'value' => $value['value'],
+                                        'id' => $value['id'],
+                                    ];
+                                }, $values),
+                            ];
+                        }
+                        
+                        return $result;
                     }
-                ]
+                ],
             ]
         ]);
 
@@ -74,7 +110,7 @@ class Schema
                 'name' => 'Query',
                 'fields' => [
                     'products' => [
-                        'type' => Type::listOf($productType),
+                        'type' => Type::listOf(self::$productType),
                         'args' => [
                             'filter' => [
                                 'type' => Type::string(),
@@ -87,6 +123,16 @@ class Schema
                                 return $product->getByCategory($args['filter']);
                             }
                             return $product->all();
+                        }
+                    ],
+                    'product' => [
+                        'type' => self::$productType,
+                        'args' => [
+                            'id' => Type::nonNull(Type::int())
+                        ],
+                        'resolve' => function ($root, $args) {
+                            $product = new Product();
+                            return $product->find($args['id']);
                         }
                     ],
                     'categories' => [
