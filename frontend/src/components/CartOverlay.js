@@ -10,7 +10,6 @@ const CartOverlay = () => {
   const total = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartTotal = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
-
   const placeOrder = async () => {
     const response = await fetch('http://localhost:8000/graphql', {
       method: 'POST',

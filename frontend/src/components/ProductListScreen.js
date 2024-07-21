@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
 import CartOverlay from '../components/CartOverlay';
 import { useCart } from '../CartContext';
 import cartIcon from '../assets/green-shopping-cart-10909.png';
