@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../CartContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
   const { cart, toggleCart } = useCart();
@@ -56,6 +58,7 @@ const Header = () => {
             onClick={() => handleCategoryClick(category.name)}
             style={{
               ...styles.categoryButton,
+              color: selectedCategory === category.name ? 'green' : 'black',
               borderBottom: selectedCategory === category.name ? '2px solid green' : 'none',
             }}
           >
@@ -68,7 +71,7 @@ const Header = () => {
         onClick={toggleCart}
         style={styles.cartButton}
       >
-        Cart
+        <FontAwesomeIcon icon={faShoppingCart} />
         {itemCount > 0 && (
           <span style={styles.cartCount}>
             {itemCount}
@@ -85,7 +88,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '20px',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'transparent',
   },
   nav: {
     display: 'flex',
