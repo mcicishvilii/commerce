@@ -73,6 +73,22 @@ const ProductDetailsScreen = () => {
         }));
     };
 
+    const filterAttributes = (categoryName, attributes) => {
+        if (!categoryName || !attributes) return [];
+        
+        const filteredAttributes = attributes.filter(attribute => {
+            if (categoryName === 'clothes' && (attribute.name === 'Size' || attribute.name === 'Color')) {
+                return true;
+            }
+            if (categoryName === 'tech' && attribute.name === 'Capacity') {
+                return true;
+            }
+            return false;
+        });
+        
+        return filteredAttributes;
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -85,6 +101,8 @@ const ProductDetailsScreen = () => {
         return <div>Product not found</div>;
     }
 
+    const filteredAttributes = filterAttributes(product.category?.name, product.attributes);
+
     return (
         <div className="product-details">
             <h1>{product.name}</h1>
@@ -96,12 +114,12 @@ const ProductDetailsScreen = () => {
             
             <div className="product-gallery">
                 {product.gallery && product.gallery.map((image, index) => (
-                    <img key={index} src={image} alt={`${product.name} - ${index + 1}`} style={{ width: '140', height: '140px', objectFit: 'cover' }} />
+                    <img key={index} src={image} alt={`${product.name} - ${index + 1}`} style={{ width: '140px', height: '140px', objectFit: 'cover' }} />
                 ))}
             </div>
             
             <div className="product-attributes">
-                {product.attributes && product.attributes.map(attribute => (
+                {filteredAttributes && filteredAttributes.map(attribute => (
                     <div key={attribute.id}>
                         <h3>{attribute.name}</h3>
                         {attribute.items && attribute.items.map(item => (
