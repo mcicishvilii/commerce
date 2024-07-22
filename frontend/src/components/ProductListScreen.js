@@ -134,9 +134,12 @@ const ProductListScreen = () => {
                             position: 'relative',
                             boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', // Add shadow for elevation
                             transition: 'box-shadow 0.3s ease', // Smooth transition for shadow
+                            display: 'flex',
+                            flexDirection: 'column', // Stack items vertically
+                            justifyContent: 'space-between' // Space out image and text
                         }}
                     >
-                        <div style={{ position: 'relative' }}>
+                        <div style={{ position: 'relative', flex: '1 0 auto' }}>
                             <img
                                 src={product.gallery[0]}
                                 alt={product.name}
@@ -165,8 +168,12 @@ const ProductListScreen = () => {
                                 </div>
                             )}
                         </div>
-                        <h2>{product.name}</h2>
-                        <p>Price: {product.price} {product.currency}</p>
+                        <div style={{ textAlign: 'left', padding: '10px 0' }}>
+                            <h2 style={{ margin: '0 0 10px 0' }}>{product.name}</h2>
+                            <p style={{ margin: 0 }}>
+                                Price: ${product.price ? product.price.toFixed(2) : 'N/A'}
+                            </p>
+                        </div>
                         {product.in_stock && (
                             <button
                                 onClick={(e) => {
