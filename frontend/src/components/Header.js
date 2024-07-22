@@ -98,6 +98,7 @@ const styles = {
     border: 'none',
     cursor: 'pointer',
     fontSize: '16px',
+    textTransform: 'uppercase',
   },
   cartButton: {
     position: 'relative',

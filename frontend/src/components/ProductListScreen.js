@@ -8,6 +8,7 @@ const ProductListScreen = () => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [hoveredProduct, setHoveredProduct] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -95,9 +96,9 @@ const ProductListScreen = () => {
     const getDefaultOptions = (attributes) => {
         const defaultOptions = {};
         attributes.forEach(attribute => {
-          if (attribute.items.length > 0) {
-            defaultOptions[attribute.id] = attribute.items[0].value;
-          }
+            if (attribute.items.length > 0) {
+                defaultOptions[attribute.id] = attribute.items[0].value;
+            }
         });
         return defaultOptions;
     };
@@ -116,12 +117,14 @@ const ProductListScreen = () => {
                 }} onClick={() => toggleCart()} />
             )}
 
-            <h1>{selectedCategory ? selectedCategory : 'All Products'}</h1>
+            <h1>{selectedCategory ? selectedCategory.toUpperCase() : 'ALL PRODUCTS'}</h1>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
                 {products.map((product) => (
                     <div
                         key={product.id}
                         onClick={() => handleProductClick(product)}
+                        onMouseEnter={() => setHoveredProduct(product.id)}
+                        onMouseLeave={() => setHoveredProduct(null)}
                         style={{
                             cursor: 'pointer',
                             border: '1px solid #ccc',
@@ -163,12 +166,12 @@ const ProductListScreen = () => {
                         <h2>{product.name}</h2>
                         <p>Price: {product.price} {product.currency}</p>
                         {product.in_stock && (
-                            <button 
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                const defaultOptions = getDefaultOptions(product.attributes);
-                                addToCart(product, defaultOptions);
-                              }}
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    const defaultOptions = getDefaultOptions(product.attributes);
+                                    addToCart(product, defaultOptions);
+                                }}
                                 style={{
                                     position: 'absolute',
                                     bottom: '10px',
@@ -179,7 +182,7 @@ const ProductListScreen = () => {
                                     width: '40px',
                                     height: '40px',
                                     borderRadius: '50%',
-                                    display: 'flex',
+                                    display: hoveredProduct === product.id ? 'flex' : 'none',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                 }}
