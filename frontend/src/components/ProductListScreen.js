@@ -3,7 +3,7 @@ import CartOverlay from '../components/CartOverlay';
 import { useCart } from '../CartContext';
 import cartIcon from '../assets/green-shopping-cart-10909.png';
 
-const ProductListScreen  = () => {
+const ProductListScreen = () => {
     const { addToCart } = useCart();
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -38,6 +38,16 @@ const ProductListScreen  = () => {
                                 name
                             }
                             gallery
+                            attributes {
+                                id
+                                name
+                                type
+                                items {
+                                    displayValue
+                                    value
+                                    id
+                                }
+                            }
                         }
                     }
                 `,
@@ -73,6 +83,16 @@ const ProductListScreen  = () => {
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
         fetchProducts(category === "all" ? null : category);
+    };
+
+    const getDefaultOptions = (attributes) => {
+        const defaultOptions = {};
+        attributes.forEach(attribute => {
+            if (attribute.items.length > 0) {
+                defaultOptions[attribute.name] = attribute.items[0].value;
+            }
+        });
+        return defaultOptions;
     };
 
     return (
@@ -156,7 +176,8 @@ const ProductListScreen  = () => {
                             <button 
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    addToCart(product, "asdas");
+                                    const defaultOptions = getDefaultOptions(product.attributes);
+                                    addToCart(product, defaultOptions);
                                 }}
                                 style={{
                                     position: 'absolute',
