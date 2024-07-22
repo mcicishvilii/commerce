@@ -80,10 +80,18 @@ class Schema
                         $attributeSet = new ProductAttributeSet();
                         $attributes = $attributeSet->getForProduct($product['id']);
                         
+                        // Add debug logging
+                        error_log('Productasdasd ID: ' . $product['id']);
+                        error_log('Attributesasdasd: ' . print_r($attributes, true));
+                        
                         $result = [];
                         foreach ($attributes as $attribute) {
                             $attributeValues = new ProductAttribute();
                             $values = $attributeValues->getForAttributeSet($attribute['id']);
+                            
+                            // Add debug logging
+                            error_log('Attribute IDasdasd: ' . $attribute['id']);
+                            error_log('Attribute Valuesaadda: ' . print_r($values, true));
                             
                             $result[] = [
                                 'id' => $attribute['id'],
@@ -98,6 +106,9 @@ class Schema
                                 }, $values),
                             ];
                         }
+                        
+                        // Add final debug logging
+                        error_log('Final Resultddd: ' . print_r($result, true));
                         
                         return $result;
                     }

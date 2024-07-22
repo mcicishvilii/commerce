@@ -156,7 +156,7 @@ const ProductListScreen  = () => {
                             <button 
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    addToCart(product, {});
+                                    addToCart(product, "asdas");
                                 }}
                                 style={{
                                     position: 'absolute',

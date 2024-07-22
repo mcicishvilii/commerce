@@ -54,6 +54,8 @@ const ProductDetailsScreen = () => {
             const data = await response.json();
             if (data.data && data.data.product) {
                 setProduct(data.data.product);
+                console.log('Product data:', data.data.product);
+                console.log('Product attributes:', data.data.product.attributes);
             } else {
                 setError('Product not found');
             }
@@ -94,7 +96,7 @@ const ProductDetailsScreen = () => {
             
             <div className="product-gallery">
                 {product.gallery && product.gallery.map((image, index) => (
-                    <img key={index} src={image} alt={`${product.name} - ${index + 1}`} />
+                    <img key={index} src={image} alt={`${product.name} - ${index + 1}`} style={{ width: '140', height: '140px', objectFit: 'cover' }} />
                 ))}
             </div>
             
