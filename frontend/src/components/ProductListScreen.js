@@ -88,12 +88,12 @@ const ProductListScreen = () => {
     const getDefaultOptions = (attributes) => {
         const defaultOptions = {};
         attributes.forEach(attribute => {
-            if (attribute.items.length > 0) {
-                defaultOptions[attribute.name] = attribute.items[0].value;
-            }
+          if (attribute.items.length > 0) {
+            defaultOptions[attribute.id] = attribute.items[0].value; // Ensure the id is used
+          }
         });
         return defaultOptions;
-    };
+      };
 
     return (
         <div style={{ paddingLeft: '80px', paddingRight: '80px' }}>
@@ -174,11 +174,11 @@ const ProductListScreen = () => {
                         <p>Price: {product.price} {product.currency}</p>
                         {product.in_stock && (
                             <button 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    const defaultOptions = getDefaultOptions(product.attributes);
-                                    addToCart(product, defaultOptions);
-                                }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                const defaultOptions = getDefaultOptions(product.attributes);
+                                addToCart(product, defaultOptions);
+                              }}
                                 style={{
                                     position: 'absolute',
                                     bottom: '10px',

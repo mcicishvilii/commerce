@@ -22,15 +22,17 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product, options) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(item => 
+      const existingItemIndex = prevCart.findIndex(item => 
         item.id === product.id && JSON.stringify(item.options) === JSON.stringify(options)
       );
-
-      if (existingItem) {
-        return prevCart.map(item => 
-          item === existingItem ? { ...item, quantity: item.quantity + 1 } : item
-        );
+  
+      if (existingItemIndex !== -1) {
+        // Update quantity of existing item
+        const updatedCart = [...prevCart];
+        updatedCart[existingItemIndex].quantity += 1;
+        return updatedCart;
       } else {
+        // Add new item to cart
         return [...prevCart, { ...product, options, quantity: 1 }];
       }
     });

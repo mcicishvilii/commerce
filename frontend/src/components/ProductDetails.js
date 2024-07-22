@@ -55,7 +55,7 @@ const ProductDetailsScreen = () => {
             const data = await response.json();
             if (data.data && data.data.product) {
                 setProduct(data.data.product);
-                setCurrentImageIndex(0); // Reset image index on new product load
+                setCurrentImageIndex(0);
             } else {
                 setError('Product not found');
             }
