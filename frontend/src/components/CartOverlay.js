@@ -39,6 +39,14 @@ const CartOverlay = () => {
     }
   };
 
+  const renderOptions = (options) => {
+    return Object.entries(options).map(([key, value]) => (
+      <div key={key} className="option-item">
+        <span className="option-name">{key}:</span> {value}
+      </div>
+    ));
+  };
+
   return (
     <div className="cart-overlay">
       <div className="cart-header">
@@ -51,13 +59,18 @@ const CartOverlay = () => {
             <img src={item.gallery[0]} alt={item.name} className="cart-item-image" />
             <div className="cart-item-details">
               <h3>{item.name}</h3>
-              <p>Options: {JSON.stringify(item.options)}</p>
+              <div className="cart-item-options">
+                {renderOptions(item.options)}
+              </div>
               <div className="quantity-control">
                 <button onClick={() => updateQuantity(item.id, item.options, item.quantity - 1)}>-</button>
                 <span>{item.quantity}</span>
                 <button onClick={() => updateQuantity(item.id, item.options, item.quantity + 1)}>+</button>
               </div>
               <button className="remove-button" onClick={() => removeFromCart(item.id, item.options)}>Remove</button>
+            </div>
+            <div className="cart-item-price">
+              ${(item.price * item.quantity).toFixed(2)}
             </div>
           </div>
         ))}
