@@ -131,7 +131,9 @@ const ProductListScreen = () => {
                             padding: '10px',
                             borderRadius: '5px',
                             textAlign: 'center',
-                            position: 'relative'
+                            position: 'relative',
+                            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', // Add shadow for elevation
+                            transition: 'box-shadow 0.3s ease', // Smooth transition for shadow
                         }}
                     >
                         <div style={{ position: 'relative' }}>
