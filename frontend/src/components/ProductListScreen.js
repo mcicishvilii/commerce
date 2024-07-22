@@ -89,7 +89,7 @@ const ProductListScreen = () => {
         const defaultOptions = {};
         attributes.forEach(attribute => {
           if (attribute.items.length > 0) {
-            defaultOptions[attribute.id] = attribute.items[0].value; // Ensure the id is used
+            defaultOptions[attribute.id] = attribute.items[0].value;
           }
         });
         return defaultOptions;
@@ -97,7 +97,7 @@ const ProductListScreen = () => {
 
     return (
         <div style={{ paddingLeft: '80px', paddingRight: '80px' }}>
-            <CartOverlay />
+            {/* <CartOverlay /> */}
             <div style={{ display: 'flex', gap: '10px', margin: '20px' }}>
                 {categories.map((category) => (
                     <button
