@@ -9,6 +9,7 @@ const ProductDetailsScreen = () => {
     const [error, setError] = useState(null);
     const { addToCart } = useCart();
     const [selectedOptions, setSelectedOptions] = useState({});
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     useEffect(() => {
         fetchProductDetails();
@@ -54,8 +55,7 @@ const ProductDetailsScreen = () => {
             const data = await response.json();
             if (data.data && data.data.product) {
                 setProduct(data.data.product);
-                console.log('Product data:', data.data.product);
-                console.log('Product attributes:', data.data.product.attributes);
+                setCurrentImageIndex(0); // Reset image index on new product load
             } else {
                 setError('Product not found');
             }
@@ -89,6 +89,14 @@ const ProductDetailsScreen = () => {
         return filteredAttributes;
     };
 
+    const showNextImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.gallery.length);
+    };
+
+    const showPrevImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex - 1 + product.gallery.length) % product.gallery.length);
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -104,48 +112,132 @@ const ProductDetailsScreen = () => {
     const filteredAttributes = filterAttributes(product.category?.name, product.attributes);
 
     return (
-        <div className="product-details">
-            <h1>{product.name}</h1>
-            <p>{product.brand}</p>
-            <p>{product.description}</p>
-            <p>Price: {product.price} {product.currency}</p>
-            <p>Category: {product.category?.name}</p>
-            <p>{product.in_stock ? 'In Stock' : 'Out of Stock'}</p>
-            
-            <div className="product-gallery">
-                {product.gallery && product.gallery.map((image, index) => (
-                    <img key={index} src={image} alt={`${product.name} - ${index + 1}`} style={{ width: '140px', height: '140px', objectFit: 'cover' }} />
-                ))}
+        <div style={styles.container}>
+            <div style={styles.gallery}>
+                <div style={styles.thumbnailContainer}>
+                    {product.gallery && product.gallery.map((image, index) => (
+                        <img
+                            key={index}
+                            src={image}
+                            alt={`${product.name} - ${index + 1}`}
+                            style={{
+                                ...styles.thumbnail,
+                                border: currentImageIndex === index ? '2px solid black' : '1px solid gray'
+                            }}
+                            onClick={() => setCurrentImageIndex(index)}
+                        />
+                    ))}
+                </div>
+                <div style={styles.mainImageContainer}>
+                    <button style={styles.arrowButton} onClick={showPrevImage}>&lt;</button>
+                    <img src={product.gallery[currentImageIndex]} alt={product.name} style={styles.mainImage} />
+                    <button style={styles.arrowButton} onClick={showNextImage}>&gt;</button>
+                </div>
             </div>
-            
-            <div className="product-attributes">
-                {filteredAttributes && filteredAttributes.map(attribute => (
-                    <div key={attribute.id}>
-                        <h3>{attribute.name}</h3>
-                        {attribute.items && attribute.items.map(item => (
-                            <button
-                                key={item.id}
-                                onClick={() => handleOptionChange(attribute.id, item.value)}
-                                style={{
-                                    border: selectedOptions[attribute.id] === item.value ? '2px solid black' : '1px solid gray',
-                                    margin: '5px',
-                                    padding: '5px'
-                                }}
-                            >
-                                {item.displayValue}
-                            </button>
-                        ))}
-                    </div>
-                ))}
-            </div>
-            
-            {product.in_stock && (
-                <button onClick={() => addToCart(product, selectedOptions)}>
-                    Add to Cart
+            <div style={styles.details}>
+                <h1>{product.name}</h1>
+                <div style={styles.price}>{product.price} {product.currency}</div>
+                <div style={styles.attributes}>
+                    {filteredAttributes && filteredAttributes.map(attribute => (
+                        <div key={attribute.id}>
+                            <h3>{attribute.name}</h3>
+                            <div style={styles.options}>
+                                {attribute.items && attribute.items.map(item => (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => handleOptionChange(attribute.id, item.value)}
+                                        style={{
+                                            ...styles.optionButton,
+                                            border: selectedOptions[attribute.id] === item.value ? '2px solid black' : '1px solid gray'
+                                        }}
+                                    >
+                                        {item.displayValue}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <button
+                    style={styles.addToCartButton}
+                    onClick={() => addToCart(product, selectedOptions)}
+                    disabled={!product.in_stock}
+                >
+                    {product.in_stock ? 'Add to Cart' : 'Out of Stock'}
                 </button>
-            )}
+            </div>
         </div>
     );
+};
+
+const styles = {
+    container: {
+        display: 'flex',
+        padding: '20px',
+    },
+    gallery: {
+        display: 'flex',
+    },
+    thumbnailContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    thumbnail: {
+        width: '50px',
+        height: '50px',
+        objectFit: 'cover',
+        marginBottom: '10px',
+        cursor: 'pointer',
+    },
+    mainImageContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        marginLeft: '20px',
+    },
+    mainImage: {
+        width: '300px',
+        height: '300px',
+        objectFit: 'cover',
+    },
+    arrowButton: {
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        background: 'none',
+        border: 'none',
+        fontSize: '24px',
+        cursor: 'pointer',
+    },
+    details: {
+        marginLeft: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    price: {
+        fontSize: '24px',
+        margin: '10px 0',
+    },
+    attributes: {
+        margin: '20px 0',
+    },
+    options: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    optionButton: {
+        margin: '5px',
+        padding: '10px',
+        cursor: 'pointer',
+    },
+    addToCartButton: {
+        marginTop: '20px',
+        padding: '10px 20px',
+        backgroundColor: 'green',
+        color: 'white',
+        border: 'none',
+        cursor: 'pointer',
+    },
 };
 
 export default ProductDetailsScreen;
