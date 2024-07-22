@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import CartOverlay from './components/CartOverlay';
 import { useCart } from './CartContext';
@@ -8,6 +8,9 @@ import DetailsScreen from './components/ProductDetails';
 
 const App = () => {
     const { isOpen, toggleCart } = useCart();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const category = searchParams.get('category') || 'all';
 
     return (
         <div style={{ paddingLeft: '80px', paddingRight: '80px' }}>
@@ -25,7 +28,7 @@ const App = () => {
                 }} onClick={() => toggleCart()} />
             )}
             <Routes>
-                <Route path="/" element={<ProductList />} />
+                <Route path="/" element={<ProductList category={category} />} />
                 <Route path="/product/:id" element={<DetailsScreen />} />
             </Routes>
         </div>

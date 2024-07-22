@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import CartOverlay from '../components/CartOverlay';
 import { useCart } from '../CartContext';
 import cartIcon from '../assets/green-shopping-cart-10909.png';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const ProductListScreen = () => {
-    const { addToCart } = useCart();
+    const { addToCart, isOpen, toggleCart } = useCart();
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const { isOpen, toggleCart } = useCart();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        fetchProducts();
         fetchCategories();
-    }, []);
+        const searchParams = new URLSearchParams(location.search);
+        const category = searchParams.get('category') || 'all';
+        setSelectedCategory(category);
+        fetchProducts(category);
+    }, [location]);
 
     const handleProductClick = (product) => {
-        window.location.href = `/product/${product.id}`;
+        navigate(`/product/${product.id}`);
     };
 
     const fetchProducts = async (category = null) => {
@@ -25,8 +29,8 @@ const ProductListScreen = () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 query: `
-                    query {
-                        products${category ? `(filter: "${category}")` : ''} {
+                    query GetProducts($category: String) {
+                        products(filter: $category) {
                             id
                             name
                             in_stock
@@ -51,6 +55,9 @@ const ProductListScreen = () => {
                         }
                     }
                 `,
+                variables: {
+                    category: category === 'all' ? null : category
+                }
             }),
         });
         const data = await response.json();
@@ -82,7 +89,7 @@ const ProductListScreen = () => {
 
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
-        fetchProducts(category === "all" ? null : category);
+        navigate(category === 'all' ? '/' : `/?category=${category}`);
     };
 
     const getDefaultOptions = (attributes) => {
@@ -93,27 +100,10 @@ const ProductListScreen = () => {
           }
         });
         return defaultOptions;
-      };
+    };
 
     return (
         <div style={{ paddingLeft: '80px', paddingRight: '80px' }}>
-            {/* <CartOverlay /> */}
-            <div style={{ display: 'flex', gap: '10px', margin: '20px' }}>
-                {categories.map((category) => (
-                    <button
-                        style={{
-                            padding: '10px',
-                            backgroundColor: 'transparent',
-                            color: '#000',
-                            border: 'none',
-                            borderBottom: selectedCategory === category.name ? '2px solid green' : 'none',
-                            cursor: 'pointer',
-                        }}
-                        key={category.id} onClick={() => handleCategoryClick(category.name)}>
-                        {category.name}
-                    </button>
-                ))}
-            </div>
             {isOpen && (
                 <div style={{
                     position: 'fixed',
