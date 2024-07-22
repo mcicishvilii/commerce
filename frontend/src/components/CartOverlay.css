@@ -129,3 +129,35 @@
   .place-order-button:hover {
     background-color: #45a049;
   }
+  .cart-item-options {
+    margin-bottom: 10px;
+  }
+  
+  .option-item {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+  
+  .option-name {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .color-options {
+    display: flex;
+    gap: 5px;
+    margin-top: 3px;
+  }
+  
+  .color-swatch {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .color-swatch.selected {
+    border: 2px solid limegreen;
+    outline: 2px solid limegreen;
+    outline-offset: 2px;
+  }

@@ -39,12 +39,58 @@ const CartOverlay = () => {
     }
   };
 
-  const renderOptions = (options) => {
-    return Object.entries(options).map(([key, value]) => (
-      <div key={key} className="option-item">
-        <span className="option-name">{key}:</span> {value}
-      </div>
-    ));
+  const renderOptions = (item) => {
+    const { options, attributes, category } = item;
+    
+    return (
+      <>
+        {attributes.map(attr => {
+          const attrName = attr.name.toLowerCase();
+          const selectedValue = options[attr.id];
+
+          if (category.name === 'clothes') {
+            if (attrName === 'size') {
+              return (
+                <div key={attr.id} className="option-item">
+                  <span className="option-name">Size:</span> {selectedValue}
+                </div>
+              );
+            } else if (attrName === 'color') {
+              return (
+                <div key={attr.id} className="option-item">
+                  <span className="option-name">Color:</span>
+                  <div className="color-options">
+                    {attr.items.map(colorItem => (
+                      <div
+                        key={colorItem.id}
+                        className={`color-swatch ${selectedValue === colorItem.value ? 'selected' : ''}`}
+                        style={{ backgroundColor: colorItem.value }}
+                        title={colorItem.displayValue}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+          } else if (category.name === 'tech') {
+            if (attrName === 'capacity') {
+              return (
+                <div key={attr.id} className="option-item">
+                  <span className="option-name">Capacity:</span> {selectedValue}
+                </div>
+              );
+            }
+          }
+          
+          // For any other attributes or categories
+          return (
+            <div key={attr.id} className="option-item">
+              <span className="option-name">{attr.name}:</span> {selectedValue}
+            </div>
+          );
+        })}
+      </>
+    );
   };
 
   return (
@@ -60,7 +106,7 @@ const CartOverlay = () => {
             <div className="cart-item-details">
               <h3>{item.name}</h3>
               <div className="cart-item-options">
-                {renderOptions(item.options)}
+                {renderOptions(item)}
               </div>
               <div className="quantity-control">
                 <button onClick={() => updateQuantity(item.id, item.options, item.quantity - 1)}>-</button>
