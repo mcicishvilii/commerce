@@ -88,11 +88,6 @@ const ProductListScreen = () => {
         }
     };
 
-    const handleCategoryClick = (category) => {
-        setSelectedCategory(category);
-        navigate(category === 'all' ? '/' : `/?category=${category}`);
-    };
-
     const getDefaultOptions = (attributes) => {
         const defaultOptions = {};
         attributes.forEach(attribute => {
@@ -132,11 +127,11 @@ const ProductListScreen = () => {
                             borderRadius: '5px',
                             textAlign: 'center',
                             position: 'relative',
-                            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', // Add shadow for elevation
-                            transition: 'box-shadow 0.3s ease', // Smooth transition for shadow
+                            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
+                            transition: 'box-shadow 0.3s ease', 
                             display: 'flex',
-                            flexDirection: 'column', // Stack items vertically
-                            justifyContent: 'space-between' // Space out image and text
+                            flexDirection: 'column',
+                            justifyContent: 'space-between'
                         }}
                     >
                         <div style={{ position: 'relative', flex: '1 0 auto' }}>
