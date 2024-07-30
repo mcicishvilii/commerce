@@ -25,11 +25,9 @@ const CartOverlay = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: `
-          mutation PlaceOrder($items: [OrderItem!]!) {
-            placeOrder(items: $items)
-          }
-        `,
+        query: `mutation PlaceOrder($items: [OrderItem!]!) {
+          placeOrder(items: $items)
+        }`,
         variables: {
           items: cart.map((item) => ({
             productId: item.id,
@@ -94,7 +92,6 @@ const CartOverlay = () => {
             }
           }
 
-          // For any other attributes or categories
           return (
             <div key={attr.id} className="option-item">
               <span className="option-name">{attr.name}:</span> {selectedValue}
@@ -116,49 +113,26 @@ const CartOverlay = () => {
         </button>
       </div>
       <div className="cart-items">
-        {cart.map((item) => (
-          <div
-            key={`${item.id}-${JSON.stringify(item.options)}`}
-            className="cart-item"
-          >
-            <img
-              src={item.gallery[0]}
-              alt={item.name}
-              className="cart-item-image"
-            />
-            <div className="cart-item-details">
-              <h3>{item.name}</h3>
-              <div className="cart-item-options">{renderOptions(item)}</div>
-              <div className="quantity-control">
-                <button
-                  onClick={() =>
-                    updateQuantity(item.id, item.options, item.quantity - 1)
-                  }
-                >
-                  -
-                </button>
-                <span>{item.quantity}</span>
-                <button
-                  onClick={() =>
-                    updateQuantity(item.id, item.options, item.quantity + 1)
-                  }
-                >
-                  +
-                </button>
-              </div>
-              <button
-                className="remove-button"
-                onClick={() => removeFromCart(item.id, item.options)}
-              >
-                Remove
-              </button>
-            </div>
-            <div className="cart-item-price">
-              ${(item.price * item.quantity).toFixed(2)}
-            </div>
-          </div>
-        ))}
+  {cart.map((item) => (
+    <div key={`${item.id}-${JSON.stringify(item.options)}`} className="cart-item">
+      <div className="cart-item-details">
+        <h3>{item.name}</h3>
+        <div className="cart-item-price">${(item.price * item.quantity).toFixed(2)}</div>
+        <div className="cart-item-options">{renderOptions(item)}</div>
+        <div className="quantity-control">
+          <button onClick={() => updateQuantity(item.id, item.options, item.quantity - 1)}>-</button>
+          <span>{item.quantity}</span>
+          <button onClick={() => updateQuantity(item.id, item.options, item.quantity + 1)}>+</button>
+        </div>
       </div>
+      <div className="cart-item-image-container">
+        <img src={item.gallery[0]} alt={item.name} className="cart-item-image" />
+      </div>
+    </div>
+  ))}
+</div>
+
+
       <div className="cart-footer">
         <h3>Total: ${cartTotal.toFixed(2)}</h3>
         <button
