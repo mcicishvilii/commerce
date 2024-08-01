@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCart } from "../CartContext";
+import './ProductDetailsScreen.css';
 
 const ProductDetailsScreen = () => {
   const { id } = useParams();
@@ -23,32 +24,32 @@ const ProductDetailsScreen = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: `
-                        query($id: Int!) {
-                            product(id: $id) {
-                                id
-                                name
-                                in_stock
-                                description
-                                brand
-                                price
-                                currency
-                                gallery
-                                category {
-                                    name
-                                }
-                                attributes {
-                                    id
-                                    name
-                                    type
-                                    items {
-                                        displayValue
-                                        value
-                                        id
-                                    }
-                                }
-                            }
-                        }
-                    `,
+            query($id: Int!) {
+              product(id: $id) {
+                id
+                name
+                in_stock
+                description
+                brand
+                price
+                currency
+                gallery
+                category {
+                  name
+                }
+                attributes {
+                  id
+                  name
+                  type
+                  items {
+                    displayValue
+                    value
+                    id
+                  }
+                }
+              }
+            }
+          `,
           variables: { id: parseInt(id) },
         }),
       });
@@ -79,11 +80,9 @@ const ProductDetailsScreen = () => {
     const filteredAttributes = attributes.filter((attribute) => {
       if (categoryName === "clothes") {
         if (attribute.name === "Size" && productId !== 1) {
-          // For clothes other than shoes
           return true;
         }
         if (attribute.name === "Size" && productId === 1) {
-          // For shoes
           return true;
         }
         if (attribute.name === "Color") {
@@ -131,17 +130,17 @@ const ProductDetailsScreen = () => {
   );
 
   return (
-    <div style={styles.container}>
-      <div style={styles.gallery}>
-        <div style={styles.thumbnailContainer}>
+    <div className="container">
+      <div className="gallery">
+        <div className="thumbnail-container">
           {product.gallery &&
             product.gallery.map((image, index) => (
               <img
                 key={index}
                 src={image}
                 alt={`${product.name} - ${index + 1}`}
+                className="thumbnail"
                 style={{
-                  ...styles.thumbnail,
                   border:
                     currentImageIndex === index
                       ? "2px solid black"
@@ -151,38 +150,38 @@ const ProductDetailsScreen = () => {
               />
             ))}
         </div>
-        <div style={styles.mainImageContainer}>
-          <button style={styles.arrowButton} onClick={showPrevImage}>
+        <div className="main-image-container">
+          <button className="arrow-button" onClick={showPrevImage} style={{ left: '10px' }}>
             &lt;
           </button>
           <img
             src={product.gallery[currentImageIndex]}
             alt={product.name}
-            style={styles.mainImage}
+            className="main-image"
           />
-          <button style={styles.arrowButton} onClick={showNextImage}>
+          <button className="arrow-button" onClick={showNextImage} style={{ right: '10px' }}>
             &gt;
           </button>
         </div>
       </div>
-      <div style={styles.details}>
+      <div className="details">
         <h1>{product.name}</h1>
-        <div style={styles.price}>
+        <div className="price">
           {product.price} {product.currency}
         </div>
-        <div style={styles.attributes}>
+        <div className="attributes">
           {filteredAttributes &&
             filteredAttributes.map((attribute) => (
               <div key={attribute.id}>
                 <h3>{attribute.name}</h3>
-                <div style={styles.options}>
+                <div className="options">
                   {attribute.items &&
                     attribute.items.map((item) => (
                       <button
                         key={item.id}
                         onClick={() => handleOptionChange(attribute.id, item.value)}
+                        className="option-button"
                         style={{
-                          ...styles.optionButton,
                           border:
                             selectedOptions[attribute.id] === item.value
                               ? "2px solid black"
@@ -198,9 +197,9 @@ const ProductDetailsScreen = () => {
                 </div>
               </div>
             ))}
-          </div>
+        </div>
         <button
-          style={styles.addToCartButton}
+          className="add-to-cart-button"
           onClick={() => addToCart(product, selectedOptions)}
           disabled={!product.in_stock}
         >
@@ -209,76 +208,6 @@ const ProductDetailsScreen = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: "flex",
-    padding: "20px",
-  },
-  gallery: {
-    display: "flex",
-  },
-  thumbnailContainer: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  thumbnail: {
-    width: "50px",
-    height: "50px",
-    objectFit: "cover",
-    marginBottom: "10px",
-    cursor: "pointer",
-  },
-  mainImageContainer: {
-    display: "flex",
-    alignItems: "center",
-    position: "relative",
-    marginLeft: "20px",
-  },
-  mainImage: {
-    width: "300px",
-    height: "300px",
-    objectFit: "cover",
-  },
-  arrowButton: {
-    position: "absolute",
-    top: "50%",
-    transform: "translateY(-50%)",
-    background: "none",
-    border: "none",
-    fontSize: "24px",
-    cursor: "pointer",
-  },
-  details: {
-    marginLeft: "20px",
-    display: "flex",
-    flexDirection: "column",
-  },
-  price: {
-    fontSize: "24px",
-    margin: "10px 0",
-  },
-  attributes: {
-    margin: "20px 0",
-  },
-  options: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  optionButton: {
-    margin: "5px",
-    padding: "10px",
-    cursor: "pointer",
-  },
-  addToCartButton: {
-    marginTop: "20px",
-    padding: "10px 20px",
-    backgroundColor: "green",
-    color: "white",
-    border: "none",
-    cursor: "pointer",
-  },
 };
 
 export default ProductDetailsScreen;
