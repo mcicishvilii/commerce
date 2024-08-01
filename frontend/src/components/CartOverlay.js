@@ -8,7 +8,6 @@ const CartOverlay = () => {
     isOpen,
     toggleCart,
     updateQuantity,
-    removeFromCart,
     clearCart,
   } = useCart();
 
@@ -104,53 +103,67 @@ const CartOverlay = () => {
 
   return (
     <div className="cart-overlay">
-      <div className="cart-header">
-        <h2>
-          Your Cart ({total} {total === 1 ? "Item" : "Items"})
-        </h2>
-        <button className="close-button" onClick={toggleCart}>
-          ✕
-        </button>
-      </div>
-      <div className="cart-items">
-  {cart.map((item) => (
-    <div key={`${item.id}-${JSON.stringify(item.options)}`} className="cart-item">
-      <div className="cart-item-details">
-        <h3>{item.name}</h3>
-        <div className="cart-item-price">${(item.price * item.quantity).toFixed(2)}</div>
-        <div className="cart-item-options">{renderOptions(item)}</div>
-        <div className="quantity-control">
-          <button onClick={() => updateQuantity(item.id, item.options, item.quantity - 1)}>-</button>
+  <div className="cart-header">
+    <h2>
+      Your Cart ({total} {total === 1 ? "Item" : "Items"})
+    </h2>
+    <button className="close-button" onClick={toggleCart}>
+      ✕
+    </button>
+  </div>
+  <div className="cart-items">
+    {cart.map((item) => (
+      <div
+        key={`${item.id}-${JSON.stringify(item.options)}`}
+        className="cart-item"
+      >
+        <div className="cart-item-details">
+          <h5>{item.name}</h5>
+          <div className="cart-item-price">
+            ${(item.price * item.quantity).toFixed(2)}
+          </div>
+          <div className="cart-item-options">{renderOptions(item)}</div>
+        </div>
+        <div className="quantity-control-vertical">
+          <button
+            onClick={() =>
+              updateQuantity(item.id, item.options, item.quantity + 1)
+            }
+          >
+            +
+          </button>
+
           <span>{item.quantity}</span>
-          <button onClick={() => updateQuantity(item.id, item.options, item.quantity + 1)}>+</button>
+          <button
+            onClick={() =>
+              updateQuantity(item.id, item.options, item.quantity - 1)
+            }
+          >
+            -
+          </button>
+        </div>
+        <div className="cart-item-image-container">
+          <img
+            src={item.gallery[0]}
+            alt={item.name}
+            className="cart-item-image"
+          />
         </div>
       </div>
-      <div className="cart-item-image-container">
-        <img src={item.gallery[0]} alt={item.name} className="cart-item-image" />
-      </div>
-    </div>
-  ))}
+    ))}
+  </div>
+
+  <div className="cart-footer">
+    <h3>Total: ${cartTotal.toFixed(2)}</h3>
+    <button
+      className="place-order-button"
+      onClick={placeOrder}
+      disabled={cart.length === 0}
+    >
+      Place Order
+    </button>
+  </div>
 </div>
-
-
-      <div className="cart-footer">
-        <h3>Total: ${cartTotal.toFixed(2)}</h3>
-        <button
-          className="clear-cart-button"
-          onClick={clearCart}
-          disabled={cart.length === 0}
-        >
-          Clear Cart
-        </button>
-        <button
-          className="place-order-button"
-          onClick={placeOrder}
-          disabled={cart.length === 0}
-        >
-          Place Order
-        </button>
-      </div>
-    </div>
   );
 };
 

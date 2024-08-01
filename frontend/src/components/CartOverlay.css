@@ -3,7 +3,8 @@
   top: 80px; /* Adjust based on your header height */
   right: 20px;
   width: 400px;
-  max-height: calc(100vh - 100px);
+  max-height: calc(100vh - 150px);
+  /* height: 200px; */
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -28,40 +29,40 @@
 }
 
 .cart-items {
-  max-height: calc(100vh - 250px);
+  max-height: calc(100vh - 50px);
   overflow-y: auto;
 }
 
 .cart-item {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   padding: 10px;
   border-bottom: 1px solid #eee;
-}
-
-.cart-item-image-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.cart-item-image {
-  max-width: 100%;
-  max-height: 150px; /* Adjust based on your design */
-  object-fit: cover;
 }
 
 .cart-item-details {
   flex: 2;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  margin-right: 20px; /* Adjusted to margin-right */
+}
+
+.cart-item-image-container {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart-item-image {
+  height: max-content;
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: cover;
 }
 
 .cart-item-options {
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .option-item {
@@ -77,7 +78,7 @@
 .color-options {
   display: flex;
   gap: 5px;
-  margin-top: 3px;
+  margin-top: 10px;
 }
 
 .color-swatch {
@@ -112,6 +113,28 @@
   margin: 0 10px;
 }
 
+.quantity-control-vertical {
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* margin: 0 20px; */
+}
+
+.quantity-control-vertical button {
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  cursor: pointer;
+  margin-bottom: 5px; /* Adjust spacing between buttons */
+}
+
+.quantity-control-vertical span {
+  margin: 5px 0; /* Adjust as needed */
+}
+
 .cart-item-price {
   font-weight: bold;
   font-size: 16px;
@@ -135,7 +158,6 @@
   border-top: 1px solid #eee;
 }
 
-.clear-cart-button,
 .place-order-button {
   width: 100%;
   padding: 10px;
@@ -143,11 +165,6 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.clear-cart-button {
-  background-color: #f8f8f8;
-  color: #333;
 }
 
 .place-order-button {
