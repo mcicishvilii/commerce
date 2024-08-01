@@ -73,22 +73,29 @@ const ProductDetailsScreen = () => {
     }));
   };
 
-  const filterAttributes = (categoryName, attributes) => {
+  const filterAttributes = (categoryName, attributes, productId) => {
     if (!categoryName || !attributes) return [];
-
+    
     const filteredAttributes = attributes.filter((attribute) => {
-      if (
-        categoryName === "clothes" &&
-        (attribute.name === "Size" || attribute.name === "Color")
-      ) {
-        return true;
+      if (categoryName === "clothes") {
+        if (attribute.name === "Size" && productId !== 1) {
+          // For clothes other than shoes
+          return true;
+        }
+        if (attribute.name === "Size" && productId === 1) {
+          // For shoes
+          return true;
+        }
+        if (attribute.name === "Color") {
+          return true;
+        }
       }
       if (categoryName === "tech" && attribute.name === "Capacity") {
         return true;
       }
       return false;
     });
-
+    
     return filteredAttributes;
   };
 
@@ -119,7 +126,8 @@ const ProductDetailsScreen = () => {
 
   const filteredAttributes = filterAttributes(
     product.category?.name,
-    product.attributes
+    product.attributes,
+    product.id
   );
 
   return (
@@ -172,24 +180,25 @@ const ProductDetailsScreen = () => {
                     attribute.items.map((item) => (
                       <button
                         key={item.id}
-                        onClick={() =>
-                          handleOptionChange(attribute.id, item.value)
-                        }
+                        onClick={() => handleOptionChange(attribute.id, item.value)}
                         style={{
                           ...styles.optionButton,
                           border:
                             selectedOptions[attribute.id] === item.value
                               ? "2px solid black"
                               : "1px solid gray",
+                          backgroundColor: attribute.type === 'swatch' ? item.value : 'transparent',
+                          width: attribute.type === 'swatch' ? '30px' : 'auto',
+                          height: attribute.type === 'swatch' ? '30px' : 'auto',
                         }}
                       >
-                        {item.displayValue}
+                        {attribute.type === 'swatch' ? '' : item.displayValue}
                       </button>
                     ))}
                 </div>
               </div>
             ))}
-        </div>
+          </div>
         <button
           style={styles.addToCartButton}
           onClick={() => addToCart(product, selectedOptions)}
