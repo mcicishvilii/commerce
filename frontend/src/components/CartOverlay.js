@@ -62,25 +62,7 @@ const CartOverlay = () => {
                   <span className="option-name">Size:</span> {selectedValue}
                 </div>
               );
-            } else if (attrName === "color") {
-              return (
-                <div key={attr.id} className="option-item">
-                  <span className="option-name">Color:</span>
-                  <div className="color-options">
-                    {attr.items.map((colorItem) => (
-                      <div
-                        key={colorItem.id}
-                        className={`color-swatch ${
-                          selectedValue === colorItem.value ? "selected" : ""
-                        }`}
-                        style={{ backgroundColor: colorItem.value }}
-                        title={colorItem.displayValue}
-                      />
-                    ))}
-                  </div>
-                </div>
-              );
-            }
+            } 
           } else if (category.name === "tech") {
             if (attrName === "capacity") {
               return (
@@ -89,8 +71,25 @@ const CartOverlay = () => {
                 </div>
               );
             }
+            else if (attrName === "color") {
+              return (
+                <div key={attr.id} className="option-item">
+                  <span className="option-name">Color:</span>
+                  <div 
+                    className="color-swatch"
+                    style={{ 
+                      backgroundColor: selectedValue,
+                      width: '20px',
+                      height: '20px',
+                      display: 'inline-block',
+                      marginLeft: '5px',
+                      border: '1px solid #ccc',
+                    }}
+                  />
+                </div>
+              );
+            }
           }
-
           return (
             <div key={attr.id} className="option-item">
               <span className="option-name">{attr.name}:</span> {selectedValue}
