@@ -76,25 +76,24 @@ const ProductDetailsScreen = () => {
 
   const filterAttributes = (categoryName, attributes, productId) => {
     if (!categoryName || !attributes) return [];
-    
+  
     const filteredAttributes = attributes.filter((attribute) => {
       if (categoryName === "clothes") {
-        if (attribute.name === "Size" && productId !== 1) {
-          return true;
-        }
-        if (attribute.name === "Size" && productId === 1) {
-          return true;
-        }
-        if (attribute.name === "Color") {
+        if (attribute.name === "Size" || attribute.name === "Color") {
           return true;
         }
       }
-      if (categoryName === "tech" && attribute.name === "Capacity") {
+      if (categoryName === "tech" && (attribute.name === "Capacity" || attribute.name === "Color")) {
         return true;
       }
+
+      if (attribute.name === "With USB 3 Ports" || attribute.name === "Touch ID in Keyboard") {
+        return true;
+      }
+
       return false;
     });
-    
+  
     return filteredAttributes;
   };
 
@@ -168,7 +167,7 @@ const ProductDetailsScreen = () => {
         <h1>{product.name}</h1>
         <div className="price">
           {product.price} {product.currency}
-        </div>
+        </div>        
         <div className="attributes">
           {filteredAttributes &&
             filteredAttributes.map((attribute) => (
@@ -191,7 +190,7 @@ const ProductDetailsScreen = () => {
                           height: attribute.type === 'swatch' ? '30px' : 'auto',
                         }}
                       >
-                        {attribute.type === 'swatch' ? '' : item.displayValue}
+                        {attribute.type === 'swatch' ? '' : item.value}
                       </button>
                     ))}
                 </div>
