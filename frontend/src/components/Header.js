@@ -3,6 +3,7 @@ import { useCart } from "../CartContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import './styles/Header.css';
 
 const Header = () => {
   const { cart, toggleCart } = useCart();
@@ -50,18 +51,13 @@ const Header = () => {
   };
 
   return (
-    <header style={styles.header}>
-      <nav style={styles.nav}>
+    <header className="header">
+      <nav className="nav">
         {categories.map((category) => (
           <button
             key={category.id}
             onClick={() => handleCategoryClick(category.name)}
-            style={{
-              ...styles.categoryButton,
-              color: selectedCategory === category.name ? "green" : "black",
-              borderBottom:
-                selectedCategory === category.name ? "2px solid green" : "none",
-            }}
+            className={`category-button ${selectedCategory === category.name ? 'active' : ''}`}
           >
             {category.name}
           </button>
@@ -70,54 +66,13 @@ const Header = () => {
       <button
         data-testid="cart-btn"
         onClick={toggleCart}
-        style={styles.cartButton}
+        className="cart-button"
       >
         <FontAwesomeIcon icon={faShoppingCart} />
-        {itemCount > 0 && <span style={styles.cartCount}>{itemCount}</span>}
+        {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
       </button>
     </header>
   );
-};
-
-const styles = {
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "20px",
-    backgroundColor: "transparent",
-  },
-  nav: {
-    display: "flex",
-    gap: "20px",
-  },
-  categoryButton: {
-    padding: "10px",
-    backgroundColor: "transparent",
-    color: "#000",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "16px",
-    textTransform: "uppercase",
-  },
-  cartButton: {
-    position: "relative",
-    padding: "10px",
-    cursor: "pointer",
-    backgroundColor: "transparent",
-    border: "none",
-    fontSize: "16px",
-  },
-  cartCount: {
-    position: "absolute",
-    top: "-10px",
-    right: "-10px",
-    backgroundColor: "red",
-    color: "white",
-    borderRadius: "50%",
-    padding: "2px 6px",
-    fontSize: "12px",
-  },
 };
 
 export default Header;
