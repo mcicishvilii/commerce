@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useCart } from "../CartContext";
 import cartIcon from "../assets/green-shopping-cart-10909.png";
 import { useNavigate, useLocation } from "react-router-dom";
-import './styles/ProductListScreen.css';
 
 const ProductListScreen = () => {
   const { addToCart, isOpen, toggleCart } = useCart();
@@ -100,38 +99,86 @@ const ProductListScreen = () => {
   };
 
   return (
-    <div className="product-list">
+    <div style={{ paddingLeft: "80px", paddingRight: "80px" }}>
       {isOpen && (
-        <div className="cart-overlay" onClick={() => toggleCart()} />
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 999,
+          }}
+          onClick={() => toggleCart()}
+        />
       )}
 
       <h1>
         {selectedCategory ? selectedCategory.toUpperCase() : "ALL PRODUCTS"}
       </h1>
-      <div className="product-grid">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "20px",
+        }}
+      >
         {products.map((product) => (
           <div
             key={product.id}
             onClick={() => handleProductClick(product)}
             onMouseEnter={() => setHoveredProduct(product.id)}
             onMouseLeave={() => setHoveredProduct(null)}
-            className="product-card"
+            style={{
+              cursor: "pointer",
+              border: "1px solid #ccc",
+              padding: "10px",
+              borderRadius: "5px",
+              textAlign: "center",
+              position: "relative",
+              boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
+              transition: "box-shadow 0.3s ease",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
           >
-            <div className="product-image-wrapper">
+            <div style={{ position: "relative", flex: "1 0 auto" }}>
               <img
                 src={product.gallery[0]}
                 alt={product.name}
-                className={`product-image ${!product.in_stock ? 'grayscale' : ''}`}
+                style={{
+                  width: "100%",
+                  height: "200px",
+                  objectFit: "contain",
+                  filter: product.in_stock ? "none" : "grayscale(100%)",
+                }}
               />
               {!product.in_stock && (
-                <div className="out-of-stock">
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    color: "white",
+                    fontSize: "1.5em",
+                  }}
+                >
                   Out of Stock
                 </div>
               )}
             </div>
-            <div className="product-details">
-              <h2 className="product-name">{product.name}</h2>
-              <p className="product-price">
+            <div style={{ textAlign: "left", padding: "10px 0" }}>
+              <h2 style={{ margin: "0 0 10px 0" }}>{product.name}</h2>
+              <p style={{ margin: 0 }}>
                 Price: ${product.price ? product.price.toFixed(2) : "N/A"}
               </p>
             </div>
@@ -142,11 +189,25 @@ const ProductListScreen = () => {
                   const defaultOptions = getDefaultOptions(product.attributes);
                   addToCart(product, defaultOptions);
                 }}
-                className="add-to-cart-button"
+                style={{
+                  position: "absolute",
+                  bottom: "10px",
+                  right: "10px",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  display: hoveredProduct === product.id ? "flex" : "none",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
                 <img
                   src={cartIcon}
                   alt="Add to Cart"
+                  style={{ width: "24px", height: "24px" }}
                 />
               </button>
             )}
