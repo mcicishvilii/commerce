@@ -1,6 +1,6 @@
 import React from "react";
 import { useCart } from "../CartContext";
-import "./CartOverlay.css";
+import "./styles/CartOverlay.css";
 
 const CartOverlay = () => {
   const {
