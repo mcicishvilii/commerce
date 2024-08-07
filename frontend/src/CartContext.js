@@ -29,12 +29,10 @@ export const CartProvider = ({ children }) => {
       );
 
       if (existingItemIndex !== -1) {
-        // Update quantity of existing item
         const updatedCart = [...prevCart];
         updatedCart[existingItemIndex].quantity += 1;
         return updatedCart;
       } else {
-        // Add new item to cart
         return [...prevCart, { ...product, options, quantity: 1 }];
       }
     });

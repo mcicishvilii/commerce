@@ -19,7 +19,7 @@ const ProductDetailsScreen = () => {
   const fetchProductDetails = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:8000/graphql", {
+      const response = await fetch("https://mcicishvilii.serv00.net/graphql", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
