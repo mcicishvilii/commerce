@@ -15,17 +15,17 @@ class DatabaseConnection
     {
 
         // //for localhost
-        // $host = "localhost";
-        // $dbname = "mishosdb";
-        // $user = "root";
-        // $password = "123456";
+        $host = "localhost";
+        $dbname = "mishosdb";
+        $user = "root";
+        $password = "123456";
         
 
         //for real server
-        $host = "mysql8.serv00.com";
-        $dbname = "m1718_mishosdb";
-        $user = "m1718";
-        $password = "(XROWmkR9L021)98drcA";
+        // $host = "mysql8.serv00.com";
+        // $dbname = "m1718_mishosdb";
+        // $user = "m1718";
+        // $password = "(XROWmkR9L021)98drcA";
 
         if (!$host || !$dbname || !$user) {
             throw new \Exception("Database configuration is incomplete. Please check your environment variables.");

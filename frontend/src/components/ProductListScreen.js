@@ -25,7 +25,7 @@ const ProductListScreen = () => {
   };
 
   const fetchProducts = async (category = null) => {
-    const response = await fetch("https://mcicishvilii.serv00.net/graphql", {
+    const response = await fetch("http://localhost:8000/graphql", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -68,7 +68,7 @@ const ProductListScreen = () => {
   };
 
   const fetchCategories = async () => {
-    const response = await fetch("https://mcicishvilii.serv00.net/graphql", {
+    const response = await fetch("http://localhost:8000/graphql", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
