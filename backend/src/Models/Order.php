@@ -5,7 +5,7 @@ namespace App\Models;
 
 class Order extends BaseModel
 {
-    protected $table = 'orders';
+    protected $table = 'order';
 
     public function create(array $items)
     {

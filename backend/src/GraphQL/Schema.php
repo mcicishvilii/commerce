@@ -162,9 +162,9 @@ class Schema
                         'type' => Type::boolean(),
                         'args' => [
                             'items' => Type::nonNull(Type::listOf(Type::nonNull(new InputObjectType([
-                                'name' => 'OrderItem',
+                                'name' => 'order_items',
                                 'fields' => [
-                                    'productId' => Type::nonNull(Type::int()),
+                                    'product_id' => Type::nonNull(Type::int()),
                                     'quantity' => Type::nonNull(Type::int()),
                                     'options' => Type::string()
                                 ]
