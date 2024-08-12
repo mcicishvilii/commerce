@@ -130,7 +130,7 @@ const ProductDetailsScreen = () => {
 
   return (
     <div className="container">
-      <div className="gallery">
+      <div className="gallery" data-testid="product-gallery">
         <div className="thumbnail-container">
           {product.gallery &&
             product.gallery.map((image, index) => (
@@ -171,7 +171,10 @@ const ProductDetailsScreen = () => {
         <div className="attributes">
           {filteredAttributes &&
             filteredAttributes.map((attribute) => (
-              <div key={attribute.id}>
+              <div 
+                key={attribute.id} 
+                data-testid={`product-attribute-${attribute.name.toLowerCase().replace(/\s+/g, '-')}`}
+              >
                 <h3>{attribute.name}</h3>
                 <div className="options">
                   {attribute.items &&
@@ -197,10 +200,14 @@ const ProductDetailsScreen = () => {
               </div>
             ))}
         </div>
+        <div data-testid="product-description">
+          {product.description}
+        </div>
         <button
           className="add-to-cart-button"
           onClick={() => addToCart(product, selectedOptions)}
           disabled={!product.in_stock}
+          data-testid="add-to-cart"
         >
           {product.in_stock ? "Add to Cart" : "Out of Stock"}
         </button>
@@ -208,5 +215,6 @@ const ProductDetailsScreen = () => {
     </div>
   );
 };
+
 
 export default ProductDetailsScreen;

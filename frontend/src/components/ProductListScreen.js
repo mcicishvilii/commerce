@@ -144,6 +144,7 @@ const ProductListScreen = () => {
               flexDirection: "column",
               justifyContent: "space-between",
             }}
+            data-testid={`product-${product.name.toLowerCase().replace(/\s+/g, '-')}`}
           >
             <div style={{ position: "relative", flex: "1 0 auto" }}>
               <img

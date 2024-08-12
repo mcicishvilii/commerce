@@ -62,6 +62,7 @@ const Header = () => {
               borderBottom:
                 selectedCategory === category.name ? "2px solid green" : "none",
             }}
+            data-testid={selectedCategory === category.name ? "active-category-link" : "category-link"}
           >
             {category.name}
           </button>
