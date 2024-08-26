@@ -1,8 +1,11 @@
 <?php
 // backend/public/index.php
-require_once __DIR__ . '/../vendor/autoload.php';
+
+require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Router;
+  
+
 
 // Allow from any origin
 if (isset($_SERVER['HTTP_ORIGIN'])) {

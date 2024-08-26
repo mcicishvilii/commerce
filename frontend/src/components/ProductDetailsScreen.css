@@ -36,19 +36,25 @@
   }
   
   .arrow-button {
-    position: absolute;
+    /* position: absolute; */
+    color: white;
     top: 50%;
     transform: translateY(-50%);
-    background: none;
+    background: gray;
     border: none;
     font-size: 24px;
     cursor: pointer;
   }
   
+  .description {
+    margin-top: 30px;
+  }
+
   .details {
     margin-left: 20px;
-    display: flex;
-    flex-direction: column;
+    margin-bottom: 30px;
+    /* display: flex; */
+    /* flex-direction: column; */
   }
   
   .price {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCart } from "../CartContext";
-import './ProductDetailsScreen.css';
+import "./ProductDetailsScreen.css";
 
 const ProductDetailsScreen = () => {
   const { id } = useParams();
@@ -76,24 +76,30 @@ const ProductDetailsScreen = () => {
 
   const filterAttributes = (categoryName, attributes, productId) => {
     if (!categoryName || !attributes) return [];
-  
+
     const filteredAttributes = attributes.filter((attribute) => {
       if (categoryName === "clothes") {
         if (attribute.name === "Size" || attribute.name === "Color") {
           return true;
         }
       }
-      if (categoryName === "tech" && (attribute.name === "Capacity" || attribute.name === "Color")) {
+      if (
+        categoryName === "tech" &&
+        (attribute.name === "Capacity" || attribute.name === "Color")
+      ) {
         return true;
       }
 
-      if (attribute.name === "With USB 3 Ports" || attribute.name === "Touch ID in Keyboard") {
+      if (
+        attribute.name === "With USB 3 Ports" ||
+        attribute.name === "Touch ID in Keyboard"
+      ) {
         return true;
       }
 
       return false;
     });
-  
+
     return filteredAttributes;
   };
 
@@ -150,7 +156,11 @@ const ProductDetailsScreen = () => {
             ))}
         </div>
         <div className="main-image-container">
-          <button className="arrow-button" onClick={showPrevImage} style={{ left: '10px' }}>
+          <button
+            className="arrow-button"
+            onClick={showPrevImage}
+            style={{ left: "10px" }}
+          >
             &lt;
           </button>
           <img
@@ -158,7 +168,11 @@ const ProductDetailsScreen = () => {
             alt={product.name}
             className="main-image"
           />
-          <button className="arrow-button" onClick={showNextImage} style={{ right: '10px' }}>
+          <button
+            className="arrow-button"
+            onClick={showNextImage}
+            style={{ right: "10px" }}
+          >
             &gt;
           </button>
         </div>
@@ -167,13 +181,15 @@ const ProductDetailsScreen = () => {
         <h1>{product.name}</h1>
         <div className="price">
           {product.price} {product.currency}
-        </div>        
+        </div>
         <div className="attributes">
           {filteredAttributes &&
             filteredAttributes.map((attribute) => (
-              <div 
-                key={attribute.id} 
-                data-testid={`product-attribute-${attribute.name.toLowerCase().replace(/\s+/g, '-')}`}
+              <div
+                key={attribute.id}
+                data-testid={`product-attribute-${attribute.name
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")}`}
               >
                 <h3>{attribute.name}</h3>
                 <div className="options">
@@ -181,28 +197,31 @@ const ProductDetailsScreen = () => {
                     attribute.items.map((item) => (
                       <button
                         key={item.id}
-                        onClick={() => handleOptionChange(attribute.id, item.value)}
+                        onClick={() =>
+                          handleOptionChange(attribute.id, item.value)
+                        }
                         className="option-button"
                         style={{
                           border:
                             selectedOptions[attribute.id] === item.value
                               ? "2px solid black"
                               : "1px solid gray",
-                          backgroundColor: attribute.type === 'swatch' ? item.value : 'transparent',
-                          width: attribute.type === 'swatch' ? '30px' : 'auto',
-                          height: attribute.type === 'swatch' ? '30px' : 'auto',
+                          backgroundColor:
+                            attribute.type === "swatch"
+                              ? item.value
+                              : "transparent",
+                          width: attribute.type === "swatch" ? "30px" : "auto",
+                          height: attribute.type === "swatch" ? "30px" : "auto",
                         }}
                       >
-                        {attribute.type === 'swatch' ? '' : item.value}
+                        {attribute.type === "swatch" ? "" : item.value}
                       </button>
                     ))}
                 </div>
               </div>
             ))}
         </div>
-        <div data-testid="product-description">
-          {product.description}
-        </div>
+
         <button
           className="add-to-cart-button"
           onClick={() => addToCart(product, selectedOptions)}
@@ -211,10 +230,10 @@ const ProductDetailsScreen = () => {
         >
           {product.in_stock ? "Add to Cart" : "Out of Stock"}
         </button>
+        <div className="description" data-testid="product-description">{product.description}</div>
       </div>
     </div>
   );
 };
-
 
 export default ProductDetailsScreen;
