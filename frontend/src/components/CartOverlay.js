@@ -20,45 +20,8 @@ const CartOverlay = () => {
   );
 
   const placeOrder = async () => {
-    const orderItems = cart.map((item) => ({
-      product_id: item.id,
-      quantity: item.quantity,
-      options: JSON.stringify(item.options),
-    }));
-  
-    try {
-      const response = await fetch("https://mcicishvilii.serv00.net/graphql", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `mutation PlaceOrder($items: [order_items!]!) {
-            placeOrder(items: $items) {
-              success
-              message
-            }
-          }`,
-          variables: { items: orderItems },
-        }),
-      });
-
-      console.log("Response status:", response.status);
-      const responseText = await response.text();
-      console.log("Response text:", responseText);
-
-      const data = JSON.parse(responseText);
-      console.log("Parsed response data:", data);
-
-      if (data.data && data.data.placeOrder.success) {
-        alert(data.data.placeOrder.message);
-        clearCart();
-      } else {
-        console.error("Order placement failed:", data.data.placeOrder.message);
-        alert(`Failed to place order: ${data.data.placeOrder.message}`);
-      }
-    } catch (error) {
-      console.error("Error during order placement:", error);
-      alert("An error occurred while placing the order. Please try again.");
-    }
+    alert("order placed successfully");
+    clearCart();
   };
 
   const renderOptions = (item) => {

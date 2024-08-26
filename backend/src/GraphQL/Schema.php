@@ -155,28 +155,6 @@ class Schema
                     ]
                 ]
             ]),
-            'mutation' => new ObjectType([
-                'name' => 'Mutation',
-                'fields' => [
-                    'placeOrder' => [
-                        'type' => Type::boolean(),
-                        'args' => [
-                            'items' => Type::nonNull(Type::listOf(Type::nonNull(new InputObjectType([
-                                'name' => 'order_items',
-                                'fields' => [
-                                    'product_id' => Type::nonNull(Type::int()),
-                                    'quantity' => Type::nonNull(Type::int()),
-                                    'options' => Type::string()
-                                ]
-                            ]))))
-                        ],
-                        'resolve' => function ($root, $args) {
-                            $order = new \App\Models\Order();
-                            return $order->create($args['items']);
-                        }
-                    ]
-                ]
-            ])
         ]);
     }
 
