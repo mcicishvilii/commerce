@@ -40,7 +40,6 @@ class ProductListScreen extends Component {
     this.props.navigate(`/product/${product.id}`);
   }
 
-
   async fetchProducts(category = null) {
     const response = await fetch("https://mcicishvilii.serv00.net/graphql", {
       method: "POST",
@@ -137,7 +136,11 @@ class ProductListScreen extends Component {
               />
             )}
 
-            <h1>{selectedCategory ? selectedCategory.toUpperCase() : "ALL PRODUCTS"}</h1>
+            <h1>
+              {selectedCategory
+                ? selectedCategory.toUpperCase()
+                : "ALL PRODUCTS"}
+            </h1>
             <div
               style={{
                 display: "grid",
@@ -149,17 +152,28 @@ class ProductListScreen extends Component {
                 <div
                   key={product.id}
                   onClick={() => this.handleProductClick(product)}
-                  onMouseEnter={() => this.setState({ hoveredProduct: product.id })}
+                  onMouseEnter={() =>
+                    this.setState({ hoveredProduct: product.id })
+                  }
                   onMouseLeave={() => this.setState({ hoveredProduct: null })}
                   style={{
                     cursor: "pointer",
-                    border: "1px solid #ccc",
-                    padding: "10px",
                     borderRadius: "5px",
                     textAlign: "center",
                     position: "relative",
-                    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
-                    transition: "box-shadow 0.3s ease",
+                    padding: "10px",
+                    boxShadow:
+                      hoveredProduct === product.id
+                        ? "0 4px 8px rgba(0, 0, 0, 0.2)"
+                        : "none",
+                    border:
+                      hoveredProduct === product.id ? "1px solid #ccc" : "none",
+                    transition:
+                      "box-shadow 0.3s ease, border 0.3s ease, transform 0.3s ease",
+                    transform:
+                      hoveredProduct === product.id
+                        ? "translateY(-5px)"
+                        : "translateY(0)",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
@@ -181,56 +195,75 @@ class ProductListScreen extends Component {
                         style={{
                           position: "absolute",
                           top: 0,
+                          fontFamily: "Raleway",
                           left: 0,
                           width: "100%",
                           height: "100%",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          backgroundColor: "rgba(0, 0, 0, 0.5)",
-                          color: "white",
-                          fontSize: "1.5em",
+                          backgroundColor: "rgba(0, 0, 0, 0.1)",
+                          color: "gray",
+                          fontSize: "1em",
                         }}
                       >
-                        Out of Stock
+                        OUT OF STOCK
                       </div>
+                    )}
+                    {product.in_stock && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const defaultOptions = this.getDefaultOptions(
+                            product.attributes
+                          );
+                          addToCart(product, defaultOptions);
+                        }}
+                        style={{
+                          position: "absolute",
+                          bottom: "-10px",
+                          right: "10px",
+                          backgroundColor: "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          display:
+                            hoveredProduct === product.id ? "flex" : "none",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                          transition:
+                            "box-shadow 0.3s ease, transform 0.3s ease",
+                          transform:
+                            hoveredProduct === product.id
+                              ? "translateY(0)"
+                              : "translateY(5px)",
+                        }}
+                      >
+                        <img
+                          src={cartIcon}
+                          alt="Add to Cart"
+                          style={{ width: "24px", height: "24px" }}
+                        />
+                      </button>
                     )}
                   </div>
                   <div style={{ textAlign: "left", padding: "10px 0" }}>
-                    <h2 style={{ margin: "0 0 10px 0" }}>{product.name}</h2>
-                    <p style={{ margin: 0 }}>
-                      Price: ${product.price ? product.price.toFixed(2) : "N/A"}
-                    </p>
-                  </div>
-                  {product.in_stock && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const defaultOptions = this.getDefaultOptions(product.attributes);
-                        addToCart(product, defaultOptions);
-                      }}
+                    <h6
                       style={{
-                        position: "absolute",
-                        bottom: "10px",
-                        right: "10px",
-                        backgroundColor: "transparent",
-                        border: "none",
-                        cursor: "pointer",
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                        display: hoveredProduct === product.id ? "flex" : "none",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        margin: "0 0 10px 0",
+                        fontFamily: "Raleway",
+                        fontWeight: "300",
                       }}
                     >
-                      <img
-                        src={cartIcon}
-                        alt="Add to Cart"
-                        style={{ width: "24px", height: "24px" }}
-                      />
-                    </button>
-                  )}
+                      {product.name}
+                    </h6>
+                    <h6 style={{ margin: 0, fontFamily: "Raleway", fontWeight: "400" }}>
+                      ${product.price ? product.price.toFixed(2) : "N/A"}
+                    </h6>
+                  </div>
                 </div>
               ))}
             </div>
@@ -246,7 +279,14 @@ function ProductListScreenWrapper(props) {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  return <ProductListScreen {...props} navigate={navigate} location={location} searchParams={searchParams} />;
+  return (
+    <ProductListScreen
+      {...props}
+      navigate={navigate}
+      location={location}
+      searchParams={searchParams}
+    />
+  );
 }
 
 export default ProductListScreenWrapper;
