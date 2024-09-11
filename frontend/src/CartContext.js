@@ -1,89 +1,113 @@
-// src/CartContext.js
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, Component } from "react";
 
 const CartContext = createContext();
 
-export const useCart = () => useContext(CartContext);
+export class CartProvider extends Component {
+  constructor(props) {
+    super(props);
 
-export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+    // Initialize state
+    this.state = {
+      cart: [],
+      isOpen: false,
+    };
 
-  useEffect(() => {
+    this.addToCart = this.addToCart.bind(this);
+    this.removeFromCart = this.removeFromCart.bind(this);
+    this.updateQuantity = this.updateQuantity.bind(this);
+    this.clearCart = this.clearCart.bind(this);
+    this.toggleCart = this.toggleCart.bind(this);
+  }
+
+  componentDidMount() {
+    // Load cart from localStorage when the component mounts
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
-      setCart(JSON.parse(savedCart));
+      this.setState({ cart: JSON.parse(savedCart) });
     }
-  }, []);
+  }
 
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+  componentDidUpdate(_, prevState) {
+    // Save cart to localStorage when the cart state changes
+    if (prevState.cart !== this.state.cart) {
+      localStorage.setItem("cart", JSON.stringify(this.state.cart));
+    }
+  }
 
-  const addToCart = (product, options) => {
-    setCart((prevCart) => {
-      const existingItemIndex = prevCart.findIndex(
+  addToCart(product, options) {
+    this.setState((prevState) => {
+      const existingItemIndex = prevState.cart.findIndex(
         (item) =>
           item.id === product.id &&
           JSON.stringify(item.options) === JSON.stringify(options)
       );
 
       if (existingItemIndex !== -1) {
-        const updatedCart = [...prevCart];
+        const updatedCart = [...prevState.cart];
         updatedCart[existingItemIndex].quantity += 1;
-        return updatedCart;
+        return { cart: updatedCart };
       } else {
-        return [...prevCart, { ...product, options, quantity: 1 }];
+        return {
+          cart: [...prevState.cart, { ...product, options, quantity: 1 }],
+        };
       }
     });
-  };
+  }
 
-  const removeFromCart = (id, options) => {
-    setCart((prevCart) =>
-      prevCart.filter(
+  removeFromCart(id, options) {
+    this.setState((prevState) => ({
+      cart: prevState.cart.filter(
         (item) =>
           !(
             item.id === id &&
             JSON.stringify(item.options) === JSON.stringify(options)
           )
-      )
-    );
-  };
+      ),
+    }));
+  }
 
-  const updateQuantity = (id, options, quantity) => {
-    setCart((prevCart) =>
-      prevCart
+  updateQuantity(id, options, quantity) {
+    this.setState((prevState) => ({
+      cart: prevState.cart
         .map((item) =>
           item.id === id &&
           JSON.stringify(item.options) === JSON.stringify(options)
             ? { ...item, quantity: Math.max(0, quantity) }
             : item
         )
-        .filter((item) => item.quantity > 0)
+        .filter((item) => item.quantity > 0),
+    }));
+  }
+
+  clearCart() {
+    this.setState({ cart: [] });
+  }
+
+  toggleCart() {
+    this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
+  }
+
+  render() {
+    const { cart, isOpen } = this.state;
+
+    return (
+      <CartContext.Provider
+        value={{
+          cart,
+          isOpen,
+          addToCart: this.addToCart,
+          removeFromCart: this.removeFromCart,
+          updateQuantity: this.updateQuantity,
+          clearCart: this.clearCart,
+          toggleCart: this.toggleCart,
+        }}
+      >
+        {this.props.children}
+      </CartContext.Provider>
     );
-  };
+  }
+}
 
-  const clearCart = () => {
-    setCart([]);
-  };
+// Consumer for class components
+export const CartConsumer = CartContext.Consumer;
 
-  const toggleCart = () => {
-    setIsOpen((prev) => !prev);
-  };
-
-  return (
-    <CartContext.Provider
-      value={{
-        cart,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        isOpen,
-        toggleCart,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
-};
