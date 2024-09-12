@@ -236,20 +236,30 @@ class ProductDetailsScreen extends Component {
                             }
                             className={`btn ${
                               selectedOptions[attribute.id] === item.value
-                                ? "btn-dark"
-                                : "btn-outline-secondary"
+                                ? "btn-selected"
+                                : "btn-default"
                             }`}
                             style={{
                               backgroundColor:
-                                attribute.type === "swatch"
+                                selectedOptions[attribute.id] === item.value
+                                  ? "black"
+                                  : attribute.type === "swatch"
                                   ? item.value
                                   : "transparent",
+                              color:
+                                selectedOptions[attribute.id] === item.value
+                                  ? "white"
+                                  : "inherit",
                               width:
                                 attribute.type === "swatch" ? "30px" : "auto",
                               height:
                                 attribute.type === "swatch" ? "30px" : "auto",
                               marginRight: '4px',
-                              borderRadius: '0'
+                              borderRadius: '0',
+                              border:
+                                selectedOptions[attribute.id] === item.value
+                                  ? "none"
+                                  : "1px solid black"
                             }}
                           >
                             {attribute.type === "swatch" ? "" : item.value}
@@ -259,6 +269,8 @@ class ProductDetailsScreen extends Component {
                     </div>
                   ))}
                 </div>
+
+
 
                 <h6
                   style={{
