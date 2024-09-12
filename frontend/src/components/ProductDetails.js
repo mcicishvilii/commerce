@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { CartConsumer } from "../CartContext";
 import "./ProductDetailsScreen.css";
-import cartIcon from "../assets/green-shopping-cart-10909.png";
+import leftArrow from "../assets/left-arrow.svg";
+import rightArrow from "../assets/right-arrow.svg";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 
 class ProductDetailsScreen extends Component {
@@ -132,24 +133,24 @@ class ProductDetailsScreen extends Component {
   render() {
     const { product, loading, error, selectedOptions, currentImageIndex } =
       this.state;
-
+  
     if (loading) {
       return <div className="text-center">Loading...</div>;
     }
-
+  
     if (error) {
       return <div className="alert alert-danger">Error: {error}</div>;
     }
-
+  
     if (!product) {
       return <div className="alert alert-warning">Product not found</div>;
     }
-
+  
     const filteredAttributes = this.filterAttributes(
       product.category?.name,
       product.attributes
     );
-
+  
     return (
       <CartConsumer>
         {({ addToCart }) => (
@@ -179,32 +180,55 @@ class ProductDetailsScreen extends Component {
                     />
                   ))}
               </div>
-
+  
               {/* Main Image */}
               <div className="col-md-5">
                 <div className="position-relative text-center">
                   <button
-                    className="btn btn-light position-absolute"
-                    style={{ left: "10px", top: "50%" }}
+                    className="btn position-absolute d-flex align-items-center justify-content-center"
+                    style={{
+                      left: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "rgba(0, 0, 0, 1)",
+                      width: "40px",
+                      height: "40px",
+                    }}
                     onClick={this.showPrevImage}
                   >
-                    &lt;
+                    <img
+                      src={leftArrow}
+                      alt="Previous Image"
+                      style={{ width: "24px", height: "24px" }}
+                    />
                   </button>
                   <img
                     src={product.gallery[currentImageIndex]}
                     alt={product.name}
                     className="img-fluid rounded"
+                    style={{ width: '600px', height: '400px', objectFit: 'scale-down' }}
                   />
                   <button
-                    className="btn btn-light position-absolute"
-                    style={{ right: "10px", top: "50%" }}
+                    className="btn position-absolute d-flex align-items-center justify-content-center"
+                    style={{
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "rgba(0, 0, 0, 1)",
+                      width: "40px",
+                      height: "40px",
+                    }}
                     onClick={this.showNextImage}
                   >
-                    &gt;
+                    <img
+                      src={rightArrow}
+                      alt="Next Image"
+                      style={{ width: "24px", height: "24px" }}
+                    />
                   </button>
                 </div>
               </div>
-
+  
               {/* Product Details and Description */}
               <div className="col-md-5">
                 <h3
@@ -213,7 +237,7 @@ class ProductDetailsScreen extends Component {
                 >
                   {product.name}
                 </h3>
-
+  
                 {/* Attributes Section */}
                 <div>
                   {filteredAttributes.map((attribute) => (
@@ -228,50 +252,55 @@ class ProductDetailsScreen extends Component {
                         {attribute.name + ":"}
                       </h6>
                       <div className="btn-toolbar">
-                        {attribute.items.map((item) => (
-                          <button
-                            key={item.id}
-                            onClick={() =>
-                              this.handleOptionChange(attribute.id, item.value)
-                            }
-                            className={`btn ${
-                              selectedOptions[attribute.id] === item.value
-                                ? "btn-selected"
-                                : "btn-default"
-                            }`}
-                            style={{
-                              backgroundColor:
-                                selectedOptions[attribute.id] === item.value
-                                  ? "black"
-                                  : attribute.type === "swatch"
+                        {attribute.items.map((item) => {
+                          const isSelected =
+                            selectedOptions[attribute.id] === item.value;
+                          const isColor = attribute.type === "swatch";
+  
+                          return (
+                            <button
+                              key={item.id}
+                              onClick={() =>
+                                this.handleOptionChange(attribute.id, item.value)
+                              }
+                              className={`btn ${
+                                isSelected
+                                  ? isColor
+                                    ? "btn-color-selected"
+                                    : "btn-selected"
+                                  : isColor
+                                  ? "btn-color-default"
+                                  : "btn-default"
+                              }`}
+                              style={{
+                                backgroundColor: isSelected
+                                  ? (isColor ? item.value : "black")
+                                  : isColor
                                   ? item.value
                                   : "transparent",
-                              color:
-                                selectedOptions[attribute.id] === item.value
-                                  ? "white"
+                                color: isSelected
+                                  ? (isColor ? "black" : "white")
                                   : "inherit",
-                              width:
-                                attribute.type === "swatch" ? "30px" : "auto",
-                              height:
-                                attribute.type === "swatch" ? "30px" : "auto",
-                              marginRight: '4px',
-                              borderRadius: '0',
-                              border:
-                                selectedOptions[attribute.id] === item.value
-                                  ? "none"
-                                  : "1px solid black"
-                            }}
-                          >
-                            {attribute.type === "swatch" ? "" : item.value}
-                          </button>
-                        ))}
+                                width: isColor ? "30px" : "auto",
+                                height: isColor ? "30px" : "auto",
+                                marginRight: '4px',
+                                borderRadius: '0',
+                                border: isSelected
+                                  ? (isColor ? "1px solid green" : "none")
+                                  : (isColor ? "none" : "1px solid black"),
+                                  outlineOffset: "-3px",
+                                  outline: isSelected && isColor ? "1px solid white" : "none",
+                              }}
+                            >
+                              {isColor ? "" : item.value}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
                 </div>
-
-
-
+  
                 <h6
                   style={{
                     fontFamily: "Roboto Condensed",
@@ -281,7 +310,7 @@ class ProductDetailsScreen extends Component {
                 >
                   {"price:"}
                 </h6>
-
+  
                 <div
                   style={{
                     fontFamily: "Raleway",
@@ -292,7 +321,7 @@ class ProductDetailsScreen extends Component {
                 >
                   ${product.price}
                 </div>
-
+  
                 <button
                   className={`btn ${
                     product.in_stock ? "btn-success" : "btn-danger"
@@ -302,9 +331,11 @@ class ProductDetailsScreen extends Component {
                 >
                   {product.in_stock ? "Add to Cart" : "Out of Stock"}
                 </button>
-
+  
                 <div>
-                  <p style={{ fontFamily: "Roboto", fontWeight: "400" }}>{product.description}</p>
+                  <p style={{ fontFamily: "Roboto", fontWeight: "400" }}>
+                    {product.description}
+                  </p>
                 </div>
               </div>
             </div>
@@ -313,6 +344,7 @@ class ProductDetailsScreen extends Component {
       </CartConsumer>
     );
   }
+  
 }
 
 function ProductDetailsScreenWrapper(props) {
