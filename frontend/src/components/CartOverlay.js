@@ -13,7 +13,7 @@ class CartOverlay extends Component {
         {attributes.map((attr) => {
           const selectedValue = options[attr.id];
           return (
-            <div key={attr.id} className="py-1">
+            <div key={attr.id} className="py-0">
               <div className="fw-bold mb-1">{attr.name}:</div>
               {attr.name.toLowerCase() === "size" ? (
                 <div className="d-flex gap-1">
