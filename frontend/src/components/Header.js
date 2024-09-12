@@ -3,7 +3,7 @@ import { CartConsumer } from "../CartContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
-import "./Header.css";
+import "./css/Header.css";
 
 class Header extends Component {
   constructor(props) {

@@ -327,7 +327,7 @@ class ProductDetailsScreen extends Component {
                   style={{
                     fontFamily: "Raleway",
                     fontWeight: "700",
-                    color: "#1D1F22", // Setting the color to #1D1F22
+                    color: "#1D1F22",
                   }}
                   className="h5 mb-3"
                 >
