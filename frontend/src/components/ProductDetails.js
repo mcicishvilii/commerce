@@ -115,12 +115,12 @@ class ProductDetailsScreen extends Component {
 
   filterAttributes(categoryName, attributes) {
     if (!categoryName || !attributes) return [];
-
-    return attributes.filter((attribute) => {
+  
+    const filtered = attributes.filter((attribute) => {
       if (categoryName === "clothes") {
         return attribute.name === "Size" || attribute.name === "Color";
       }
-      if (categoryName === "tech") {
+      if (categoryName === "tech" && (attribute.name === "Capacity" || attribute.name === "Color")) {
         return attribute.name === "Capacity" || attribute.name === "Color";
       }
       return (
@@ -128,8 +128,21 @@ class ProductDetailsScreen extends Component {
         attribute.name === "Touch ID in Keyboard"
       );
     });
+  
+    // Remove duplicates
+    filtered.forEach(attribute => {
+      if (attribute.name === "Touch ID in Keyboard") {
+        const uniqueItems = Array.from(new Set(attribute.items.map(item => item.value)))
+          .map(value => attribute.items.find(item => item.value === value));
+        attribute.items = uniqueItems;
+      }
+    });
+  
+    console.log('Filtered attributes with unique items:', filtered);
+  
+    return filtered;
   }
-
+  
   render() {
     const { product, loading, error, selectedOptions, currentImageIndex } =
       this.state;
