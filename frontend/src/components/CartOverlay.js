@@ -18,7 +18,9 @@ class CartOverlay extends Component {
           order_date: new Date().toISOString(),
         };
   
-        const mutation = `...`;
+        const mutation = `mutation CreateOrder($order_number: String!, $product_name: String!, $product_option: String!, $price: Float!, $order_date: String!) {
+          createOrder(order_number: $order_number, product_name: $product_name, product_option: $product_option, price: $price, order_date: $order_date)
+        }`;
   
         const response = await fetch('https://mcicishvilii.serv00.net/graphql', {
           method: 'POST',
