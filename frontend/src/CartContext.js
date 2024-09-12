@@ -6,7 +6,6 @@ export class CartProvider extends Component {
   constructor(props) {
     super(props);
 
-    // Initialize state
     this.state = {
       cart: [],
       isOpen: false,
@@ -20,7 +19,6 @@ export class CartProvider extends Component {
   }
 
   componentDidMount() {
-    // Load cart from localStorage when the component mounts
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       this.setState({ cart: JSON.parse(savedCart) });
@@ -28,7 +26,6 @@ export class CartProvider extends Component {
   }
 
   componentDidUpdate(_, prevState) {
-    // Save cart to localStorage when the cart state changes
     if (prevState.cart !== this.state.cart) {
       localStorage.setItem("cart", JSON.stringify(this.state.cart));
     }

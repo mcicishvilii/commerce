@@ -22,7 +22,7 @@ class App extends Component {
     const { category } = this.state;
 
     return (
-      <div style={{ paddingLeft: "250px", paddingRight: "250px" }}>
+      <div style={{ paddingLeft: "250px", paddingRight: "250px", paddingTop: "23px" }}>
         <Header />
         <CartConsumer>
           {({ isOpen, toggleCart }) => (

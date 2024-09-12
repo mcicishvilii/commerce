@@ -136,7 +136,7 @@ class ProductListScreen extends Component {
               />
             )}
 
-            <h1>
+            <h1 style={{ fontFamily: "Raleway", fontWeight: "400" }}>
               {selectedCategory
                 ? selectedCategory.toUpperCase()
                 : "ALL PRODUCTS"}
