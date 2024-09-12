@@ -52,9 +52,10 @@ class Header extends Component {
     }
   };
 
-  handleCategoryClick = (category) => {
+  handleCategoryClick = (category, toggleCart, isOpen) => {
     this.setState({ selectedCategory: category });
     this.props.navigate(category === "all" ? "/" : `/?category=${category}`);
+    if (isOpen) toggleCart();
   };
 
   render() {
@@ -62,7 +63,7 @@ class Header extends Component {
 
     return (
       <CartConsumer>
-        {({ cart, toggleCart }) => {
+        {({ cart, toggleCart, isOpen}) => {
           const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
           return (
             <header className="header sticky">
@@ -70,7 +71,7 @@ class Header extends Component {
                 {categories.map((category) => (
                   <button
                     key={category.id}
-                    onClick={() => this.handleCategoryClick(category.name)}
+                    onClick={() => this.handleCategoryClick(category.name, toggleCart, isOpen)}
                     className={`category-button ${selectedCategory === category.name ? 'active' : ''}`}
                     data-testid={selectedCategory === category.name ? "active-category-link" : "category-link"}
                   >
@@ -80,7 +81,7 @@ class Header extends Component {
               </nav>
               <button
                 data-testid="cart-btn"
-                onClick={toggleCart}
+                onClick={() => toggleCart()}
                 className="cart-button"
               >
                 <FontAwesomeIcon icon={faShoppingCart} />
