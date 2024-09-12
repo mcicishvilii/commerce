@@ -81,7 +81,10 @@ class ProductDetailsScreen extends Component {
         this.setState({ error: "Product not found", loading: false });
       }
     } catch (err) {
-      this.setState({ error: "An error occurred while fetching the product", loading: false });
+      this.setState({
+        error: "An error occurred while fetching the product",
+        loading: false,
+      });
     }
   }
 
@@ -96,14 +99,16 @@ class ProductDetailsScreen extends Component {
 
   showNextImage() {
     this.setState((prevState) => ({
-      currentImageIndex: (prevState.currentImageIndex + 1) % prevState.product.gallery.length,
+      currentImageIndex:
+        (prevState.currentImageIndex + 1) % prevState.product.gallery.length,
     }));
   }
 
   showPrevImage() {
     this.setState((prevState) => ({
       currentImageIndex:
-        (prevState.currentImageIndex - 1 + prevState.product.gallery.length) % prevState.product.gallery.length,
+        (prevState.currentImageIndex - 1 + prevState.product.gallery.length) %
+        prevState.product.gallery.length,
     }));
   }
 
@@ -117,101 +122,178 @@ class ProductDetailsScreen extends Component {
       if (categoryName === "tech") {
         return attribute.name === "Capacity" || attribute.name === "Color";
       }
-      return attribute.name === "With USB 3 Ports" || attribute.name === "Touch ID in Keyboard";
+      return (
+        attribute.name === "With USB 3 Ports" ||
+        attribute.name === "Touch ID in Keyboard"
+      );
     });
   }
 
   render() {
-    const { product, loading, error, selectedOptions, currentImageIndex } = this.state;
+    const { product, loading, error, selectedOptions, currentImageIndex } =
+      this.state;
 
     if (loading) {
-      return <div>Loading...</div>;
+      return <div className="text-center">Loading...</div>;
     }
 
     if (error) {
-      return <div>Error: {error}</div>;
+      return <div className="alert alert-danger">Error: {error}</div>;
     }
 
     if (!product) {
-      return <div>Product not found</div>;
+      return <div className="alert alert-warning">Product not found</div>;
     }
 
-    const filteredAttributes = this.filterAttributes(product.category?.name, product.attributes);
+    const filteredAttributes = this.filterAttributes(
+      product.category?.name,
+      product.attributes
+    );
 
     return (
       <CartConsumer>
         {({ addToCart }) => (
-          <div className="container">
-            <div className="gallery" data-testid="product-gallery">
-              <div className="thumbnail-container">
+          <div className="container mt-5">
+            <div className="row">
+              {/* Thumbnails Vertical List */}
+              <div className="col-md-2 d-flex flex-column align-items-center">
                 {product.gallery &&
                   product.gallery.map((image, index) => (
                     <img
                       key={index}
                       src={image}
                       alt={`${product.name} - ${index + 1}`}
-                      className="thumbnail"
+                      className={`img-thumbnail mb-2 ${
+                        currentImageIndex === index
+                          ? "border-dark"
+                          : "border-light"
+                      }`}
+                      onClick={() =>
+                        this.setState({ currentImageIndex: index })
+                      }
                       style={{
-                        border: currentImageIndex === index ? "2px solid black" : "1px solid gray",
+                        cursor: "pointer",
+                        width: "60px",
+                        height: "60px",
                       }}
-                      onClick={() => this.setState({ currentImageIndex: index })}
                     />
                   ))}
               </div>
-              <div className="main-image-container">
-                <button className="arrow-button" onClick={this.showPrevImage} style={{ left: "10px" }}>
-                  &lt;
-                </button>
-                <img
-                  src={product.gallery[currentImageIndex]}
-                  alt={product.name}
-                  className="main-image"
-                />
-                <button className="arrow-button" onClick={this.showNextImage} style={{ right: "10px" }}>
-                  &gt;
-                </button>
-              </div>
-            </div>
-            <div className="details">
-              <h1>{product.name}</h1>
-              <div className="price">
-                {product.price} {product.currency}
-              </div>
-              <div className="attributes">
-                {filteredAttributes.map((attribute) => (
-                  <div key={attribute.id} data-testid={`product-attribute-${attribute.name.toLowerCase().replace(/\s+/g, "-")}`}>
-                    <h3>{attribute.name}</h3>
-                    <div className="options">
-                      {attribute.items.map((item) => (
-                        <button
-                          key={item.id}
-                          onClick={() => this.handleOptionChange(attribute.id, item.value)}
-                          className="option-button"
-                          style={{
-                            border: selectedOptions[attribute.id] === item.value ? "2px solid black" : "1px solid gray",
-                            backgroundColor: attribute.type === "swatch" ? item.value : "transparent",
-                            width: attribute.type === "swatch" ? "30px" : "auto",
-                            height: attribute.type === "swatch" ? "30px" : "auto",
-                          }}
-                        >
-                          {attribute.type === "swatch" ? "" : item.value}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+
+              {/* Main Image */}
+              <div className="col-md-5">
+                <div className="position-relative text-center">
+                  <button
+                    className="btn btn-light position-absolute"
+                    style={{ left: "10px", top: "50%" }}
+                    onClick={this.showPrevImage}
+                  >
+                    &lt;
+                  </button>
+                  <img
+                    src={product.gallery[currentImageIndex]}
+                    alt={product.name}
+                    className="img-fluid rounded"
+                  />
+                  <button
+                    className="btn btn-light position-absolute"
+                    style={{ right: "10px", top: "50%" }}
+                    onClick={this.showNextImage}
+                  >
+                    &gt;
+                  </button>
+                </div>
               </div>
 
-              <button
-                className="add-to-cart-button"
-                onClick={() => addToCart(product, selectedOptions)}
-                disabled={!product.in_stock}
-                data-testid="add-to-cart"
-              >
-                {product.in_stock ? "Add to Cart" : "Out of Stock"}
-              </button>
-              <div className="description" data-testid="product-description">
-                {product.description}
+              {/* Product Details and Description */}
+              <div className="col-md-5">
+                <h3
+                  style={{ fontFamily: "Raleway", fontWeight: "600" }}
+                  className="mb-3"
+                >
+                  {product.name}
+                </h3>
+
+                {/* Attributes Section */}
+                <div>
+                  {filteredAttributes.map((attribute) => (
+                    <div key={attribute.id} className="mb-3">
+                      <h6
+                        style={{
+                          fontFamily: "Roboto Condensed",
+                          fontWeight: "700",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {attribute.name + ":"}
+                      </h6>
+                      <div className="btn-toolbar">
+                        {attribute.items.map((item) => (
+                          <button
+                            key={item.id}
+                            onClick={() =>
+                              this.handleOptionChange(attribute.id, item.value)
+                            }
+                            className={`btn ${
+                              selectedOptions[attribute.id] === item.value
+                                ? "btn-dark"
+                                : "btn-outline-secondary"
+                            }`}
+                            style={{
+                              backgroundColor:
+                                attribute.type === "swatch"
+                                  ? item.value
+                                  : "transparent",
+                              width:
+                                attribute.type === "swatch" ? "30px" : "auto",
+                              height:
+                                attribute.type === "swatch" ? "30px" : "auto",
+                              marginRight: '4px',
+                              borderRadius: '0'
+                            }}
+                          >
+                            {attribute.type === "swatch" ? "" : item.value}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <h6
+                  style={{
+                    fontFamily: "Roboto Condensed",
+                    fontWeight: "700",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {"price:"}
+                </h6>
+
+                <div
+                  style={{
+                    fontFamily: "Raleway",
+                    fontWeight: "700",
+                    color: "#1D1F22", // Setting the color to #1D1F22
+                  }}
+                  className="h5 mb-3"
+                >
+                  ${product.price}
+                </div>
+
+                <button
+                  className={`btn ${
+                    product.in_stock ? "btn-success" : "btn-danger"
+                  } w-100 mb-3`}
+                  onClick={() => addToCart(product, selectedOptions)}
+                  disabled={!product.in_stock}
+                >
+                  {product.in_stock ? "Add to Cart" : "Out of Stock"}
+                </button>
+
+                <div>
+                  <p style={{ fontFamily: "Roboto", fontWeight: "400" }}>{product.description}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -221,13 +303,14 @@ class ProductDetailsScreen extends Component {
   }
 }
 
-
 function ProductDetailsScreenWrapper(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
 
-  return <ProductDetailsScreen {...props} router={{ navigate, location, params }} />;
+  return (
+    <ProductDetailsScreen {...props} router={{ navigate, location, params }} />
+  );
 }
 
 export default ProductDetailsScreenWrapper;
