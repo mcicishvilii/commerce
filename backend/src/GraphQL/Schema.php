@@ -80,19 +80,10 @@ class Schema
                         $attributeSet = new ProductAttributeSet();
                         $attributes = $attributeSet->getForProduct($product['id']);
                         
-                        // Add debug logging
-                        error_log('Productasdasd ID: ' . $product['id']);
-                        error_log('Attributesasdasd: ' . print_r($attributes, true));
-                        
                         $result = [];
                         foreach ($attributes as $attribute) {
                             $attributeValues = new ProductAttribute();
                             $values = $attributeValues->getForAttributeSet($attribute['id']);
-                            
-                            // Add debug logging
-                            error_log('Attribute IDasdasd: ' . $attribute['id']);
-                            error_log('Attribute Valuesaadda: ' . print_r($values, true));
-                            
                             $result[] = [
                                 'id' => $attribute['id'],
                                 'name' => $attribute['name'],
@@ -106,10 +97,6 @@ class Schema
                                 }, $values),
                             ];
                         }
-                        
-                        // Add final debug logging
-                        error_log('Final Resultddd: ' . print_r($result, true));
-                        
                         return $result;
                     }
                 ],
@@ -155,6 +142,33 @@ class Schema
                     ]
                 ]
             ]),
+
+            'mutation' => new ObjectType([
+                'name' => 'Mutation',
+                'fields' => [
+                    'createOrder' => [
+                        'type' => Type::boolean(),
+                        'args' => [
+                            'order_number' => Type::nonNull(Type::string()),
+                            'product_name' => Type::nonNull(Type::string()),
+                            'product_option' => Type::nonNull(Type::string()), 
+                            'price' => Type::nonNull(Type::float()),
+                            'order_date' => Type::nonNull(Type::string()),
+                        ],
+                        'resolve' => function ($root, $args) {
+                            $order = new \App\Models\Order();
+                            $data = [
+                                'order_number' => $args['order_number'],
+                                'product_name' => $args['product_name'],
+                                'product_option' => $args['product_option'],
+                                'price' => $args['price'],
+                                'order_date' => $args['order_date'],
+                            ];
+                            return $order->create($data);
+                        }
+                    ]
+                ]
+            ])
         ]);
     }
 
