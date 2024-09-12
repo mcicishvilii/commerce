@@ -3,6 +3,29 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1040;
   }
+
+  .text-items{
+    font-family: Raleway;
+  }
+
+  .text-item-name{
+    font-family: Raleway;
+    font-weight: 300;
+  }
+
+  .span-my-bag{
+    padding-bottom: 32px;
+  }
+  .my-bag-text {
+    font-family: Raleway;
+    font-weight: 700;
+  }
+
+  .items-count {
+    font-family: Raleway;
+    font-weight: 500;
+  }
+
   
   /* Cart Overlay */
   .cart-overlay {

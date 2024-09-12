@@ -3,55 +3,56 @@ import { CartConsumer } from "../CartContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import plusButton from "../assets/plus-square.svg";
 import minusButton from "../assets/dash-square.svg";
-import './css/CartOverlay.css';  // Import the CSS file
+import "./css/CartOverlay.css"; // Import the CSS file
 
 class CartOverlay extends Component {
-
   placeOrder = async (cart, clearCart) => {
     try {
       for (const item of cart) {
         const orderData = {
           order_number: Math.random().toString(36).substring(2, 15),
-          product_name: item.name, 
-          product_option: JSON.stringify(item.options), 
+          product_name: item.name,
+          product_option: JSON.stringify(item.options),
           price: item.price * item.quantity,
           order_date: new Date().toISOString(),
         };
-  
+
         const mutation = `mutation CreateOrder($order_number: String!, $product_name: String!, $product_option: String!, $price: Float!, $order_date: String!) {
           createOrder(order_number: $order_number, product_name: $product_name, product_option: $product_option, price: $price, order_date: $order_date)
         }`;
-  
-        const response = await fetch('https://mcicishvilii.serv00.net/graphql', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: mutation,
-            variables: orderData,
-          }),
-        });
-  
-        const text = await response.text(); 
+
+        const response = await fetch(
+          "https://mcicishvilii.serv00.net/graphql",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              query: mutation,
+              variables: orderData,
+            }),
+          }
+        );
+
+        const text = await response.text();
         const result = JSON.parse(text);
-  
+
         if (result.errors) {
-          console.error('GraphQL Error:', result.errors);
-          alert('Order failed for item: ' + item.name);
-          return; 
+          console.error("GraphQL Error:", result.errors);
+          alert("Order failed for item: " + item.name);
+          return;
         }
       }
-  
-      alert('All orders placed successfully');
+
+      alert("All orders placed successfully");
       clearCart();
-  
     } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred while placing the order.');
+      console.error("Error:", error);
+      alert("An error occurred while placing the order.");
     }
   };
-  
+
   renderOptions(item) {
     const { options, attributes, category } = item;
 
@@ -76,14 +77,17 @@ class CartOverlay extends Component {
                   ))}
                 </div>
               ) : attr.name.toLowerCase() === "color" ? (
-                <div className="d-flex gap-1">
+                <div className="btn-toolbar">
                   {attr.items.map((color) => (
                     <button
                       key={color.id}
                       className={`color-option ${
                         selectedValue === color.value ? "selected" : ""
                       }`}
-                      style={{ backgroundColor: color.value }}
+                      style={{
+                        backgroundColor: color.value,
+                        marginRight: "3px",
+                      }}
                     />
                   ))}
                 </div>
@@ -112,15 +116,16 @@ class CartOverlay extends Component {
               ></div>
 
               {/* Cart Overlay */}
-              <div
-                className="position-fixed top-0 end-0 h-50 bg-white shadow-lg cart-overlay"
-              >
+              <div className="position-fixed top-0 end-0 h-50 bg-white shadow-lg cart-overlay">
                 <div className="p-3">
                   <div className="d-flex justify-content-between align-items-center  pb-2 mb-3">
-                    <h5 className="m-0">
-                      My Bag,{" "}
-                      {cart.reduce((sum, item) => sum + item.quantity, 0)} {cart.length === 1 ? "item" : "items"}
-                    </h5>
+                    <span className="d-flex align-items-center span-my-bag">
+                      <h5 className="m-0 my-bag-text">My Bag,</h5>
+                      <h5 className="m-0 items-count">
+                        {cart.reduce((sum, item) => sum + item.quantity, 0)}{" "}
+                        {cart.length === 1 ? "item" : "items"}
+                      </h5>{" "}
+                    </span>
                   </div>
                   <div className="mb-2">
                     {cart.map((item) => (
@@ -129,7 +134,7 @@ class CartOverlay extends Component {
                         className="d-flex mb-4 align-items-center cart-item"
                       >
                         <div className="flex-grow-1 me-2">
-                          <div className="fw-bold mb-1">{item.name}</div>
+                          <div className="fw-bold mb-1 text-item-name">{item.name}</div>
                           <div className="fw-bold mb-2">
                             ${item.price.toFixed(2)}
                           </div>
