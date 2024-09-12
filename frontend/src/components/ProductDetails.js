@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { CartConsumer } from "../CartContext";
-import "./ProductDetailsScreen.css";
 import leftArrow from "../assets/left-arrow.svg";
 import rightArrow from "../assets/right-arrow.svg";
 import { useNavigate, useLocation, useParams } from "react-router-dom";

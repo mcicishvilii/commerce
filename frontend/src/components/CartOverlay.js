@@ -120,7 +120,7 @@ class CartOverlay extends Component {
             <>
               {/* Backdrop */}
               <div
-                className="position-fixed top-0 start-0 w-100 h-100"
+                className="position-fixed top-0 start-0 w-100"
                 style={{
                   backgroundColor: "rgba(0, 0, 0, 0.5)",
                   zIndex: 1040,
@@ -130,11 +130,13 @@ class CartOverlay extends Component {
 
               {/* Cart Overlay */}
               <div
-                className="position-fixed top-0 end-0 h-100 bg-white border-start border-secondary shadow-lg"
+                className="position-fixed top-0 end-0 h-50 bg-white border-start border-secondary shadow-lg"
                 style={{
                   width: "350px",
                   zIndex: 1050,
                   overflowY: "auto",
+                  marginRight: "80px",
+                  marginTop: "90px",
                 }}
               >
                 <div className="p-3">

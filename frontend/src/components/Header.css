@@ -1,10 +1,13 @@
-.header {
+.header.sticky {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 80px;
-    padding-bottom: 40px;
-    background-color: transparent;
+    padding: 20px 80px;
+    position: sticky;
+    background-color: white;
+    top: 0;
+    z-index: 1000;
+    background: white;
   }
   
   .nav {

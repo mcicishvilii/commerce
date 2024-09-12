@@ -64,9 +64,8 @@ class Header extends Component {
       <CartConsumer>
         {({ cart, toggleCart }) => {
           const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
-
           return (
-            <header className="header">
+            <header className="header sticky">
               <nav className="nav">
                 {categories.map((category) => (
                   <button

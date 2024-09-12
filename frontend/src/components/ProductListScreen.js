@@ -118,6 +118,7 @@ class ProductListScreen extends Component {
     const { products, selectedCategory, hoveredProduct } = this.state;
 
     return (
+      
       <CartConsumer>
         {({ addToCart, isOpen, toggleCart }) => (
           <div style={{ paddingLeft: "80px", paddingRight: "80px" }}>
