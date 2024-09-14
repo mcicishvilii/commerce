@@ -1,10 +1,8 @@
-/* Backdrop */
 .backdrop {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1040;
 }
 
-/* Cart Overlay */
 .cart-overlay {
   width: 350px;
   z-index: 1050;
@@ -34,7 +32,7 @@
   font-family: Raleway;
   font-weight: 500;
 }
-/* Cart Item */
+
 .cart-item {
   display: flex;
   justify-content: space-between;
@@ -44,7 +42,6 @@
   border-bottom: 1px solid #eee;
 }
 
-/* Text Section */
 .cart-item-text {
   width: 150px;
   overflow: hidden;
@@ -53,7 +50,6 @@
   justify-content: space-between;
 }
 
-/* Controls Section */
 .cart-item-controls {
   width: 50px;
   display: flex;
@@ -62,7 +58,6 @@
   align-items: center;
 }
 
-/* Image Section */
 .cart-item-img-container {
   width: 100px;
   height: 100%;
@@ -77,7 +72,6 @@
   object-fit: contain;
 }
 
-/* Buttons */
 .btn-increase,
 .btn-decrease {
   width: 24px;
@@ -87,7 +81,6 @@
   align-items: center;
   justify-content: center;
 }
-
 
 .size-option, .color-option {
   cursor: default;
@@ -105,13 +98,13 @@
 }
 
 .btn-outline-dark.btn-sm.active:hover {
-  background-color: black; /* Or any color you want for the active button */
-  border-color: black; /* Keep the border color unchanged */
-  color: white; /* Keep the text color as well */
+  background-color: black;
+  border-color: black;
+  color: white;
 }
 
 .btn-outline-dark.btn-sm:hover {
-  background-color: white; /* Or any color you want for the active button */
-  border-color: black; /* Keep the border color unchanged */
-  color: black; /* Keep the text color as well */
+  background-color: white;
+  border-color: black;
+  color: black;
 }

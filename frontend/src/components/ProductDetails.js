@@ -293,8 +293,8 @@ class ProductDetailsScreen extends Component {
                                 color: isSelected
                                   ? (isColor ? "black" : "white")
                                   : "inherit",
-                                width: isColor ? "50px" : "50px",
-                                height: isColor ? "40px" : "40px",
+                                width: isColor ? "25px" : "50px",
+                                height: isColor ? "25px" : "40px",
                                 marginRight: '8px',
                                 padding: '0px',
                                 borderRadius: '0',

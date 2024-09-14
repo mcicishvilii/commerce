@@ -3,7 +3,7 @@ import { CartConsumer } from "../CartContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import plusButton from "../assets/plus-square.svg";
 import minusButton from "../assets/dash-square.svg";
-import "./css/CartOverlay.css"; // Import the CSS file
+import "./css/CartOverlay.css"; 
 
 class CartOverlay extends Component {
   placeOrder = async (cart, clearCart) => {
