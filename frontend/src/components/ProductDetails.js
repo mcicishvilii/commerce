@@ -293,9 +293,10 @@ class ProductDetailsScreen extends Component {
                                 color: isSelected
                                   ? (isColor ? "black" : "white")
                                   : "inherit",
-                                width: isColor ? "30px" : "auto",
-                                height: isColor ? "30px" : "auto",
-                                marginRight: '4px',
+                                width: isColor ? "50px" : "50px",
+                                height: isColor ? "40px" : "40px",
+                                marginRight: '8px',
+                                padding: '0px',
                                 borderRadius: '0',
                                 border: isSelected
                                   ? (isColor ? "1px solid green" : "none")
@@ -336,10 +337,11 @@ class ProductDetailsScreen extends Component {
   
                 <button
                   className={`btn ${
-                    product.in_stock ? "btn-success" : "btn-danger"
-                  } w-100 mb-3`}
+                    product.in_stock ? "btn-success" : "btn btn-secondary"
+                  } w-50 mb-3`}
                   onClick={() => addToCart(product, selectedOptions)}
                   disabled={!product.in_stock}
+                  style={{ borderRadius: 0 }}
                 >
                   {product.in_stock ? "Add to Cart" : "Out of Stock"}
                 </button>

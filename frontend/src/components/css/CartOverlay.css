@@ -1,79 +1,117 @@
 /* Backdrop */
 .backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1040;
-  }
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+}
 
-  .text-items{
-    font-family: Raleway;
-  }
+/* Cart Overlay */
+.cart-overlay {
+  width: 350px;
+  z-index: 1050;
+  overflow-y: auto;
+  margin-right: 80px;
+  margin-top: 90px;
+}
 
-  .text-item-name{
-    font-family: Raleway;
-    font-weight: 300;
-  }
+.text-items{
+  font-family: Raleway;
+}
 
-  .span-my-bag{
-    padding-bottom: 32px;
-  }
-  .my-bag-text {
-    font-family: Raleway;
-    font-weight: 700;
-  }
+.text-item-name{
+  font-family: Raleway;
+  font-weight: 300;
+}
 
-  .items-count {
-    font-family: Raleway;
-    font-weight: 500;
-  }
+.span-my-bag{
+  padding-bottom: 32px;
+}
+.my-bag-text {
+  font-family: Raleway;
+  font-weight: 700;
+}
 
-  
-  /* Cart Overlay */
-  .cart-overlay {
-    width: 350px;
-    z-index: 1050;
-    overflow-y: auto;
-    margin-right: 80px;
-    margin-top: 90px;
-  }
-  
-  /* Cart Item */
-  .cart-item {
-    height: 200px;
-  }
-  
-  .cart-item-img {
-    max-height: 120px;
-    object-fit: cover;
-  }
-  
-  /* Buttons */
-  .btn-increase,
-  .btn-decrease {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .btn-success {
-    background-color: #5ece7b;
-    border-color: #5ece7b;
-  }
-  
-  /* Color Option Button */
-  .color-option {
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border-radius: 0;
-    border-color: transparent;
-    cursor: pointer;
-  }
-  
-  .color-option.selected {
-    border: 2px solid #007bff;
-  }
-  
-  /* Size Option Button */
-  .size-option {
-    min-width: 30px;
-  }
-  
+.items-count {
+  font-family: Raleway;
+  font-weight: 500;
+}
+/* Cart Item */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  height: 200px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Text Section */
+.cart-item-text {
+  width: 150px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Controls Section */
+.cart-item-controls {
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Image Section */
+.cart-item-img-container {
+  width: 100px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-item-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Buttons */
+.btn-increase,
+.btn-decrease {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.size-option, .color-option {
+  cursor: default;
+  user-select: none;
+  border: 1px solid #dee2e6;
+}
+
+.size-option.active {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.color-option.selected {
+  box-shadow: 0 0 0 2px #5ECE7B;
+}
+
+.btn-outline-dark.btn-sm.active:hover {
+  background-color: black; /* Or any color you want for the active button */
+  border-color: black; /* Keep the border color unchanged */
+  color: white; /* Keep the text color as well */
+}
+
+.btn-outline-dark.btn-sm:hover {
+  background-color: white; /* Or any color you want for the active button */
+  border-color: black; /* Keep the border color unchanged */
+  color: black; /* Keep the text color as well */
+}

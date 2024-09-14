@@ -64,20 +64,27 @@ class CartOverlay extends Component {
             <div key={attr.id} className="py-0">
               <div className="fw-bold mb-1">{attr.name}:</div>
               {attr.name.toLowerCase() === "size" ? (
-                <div className="d-flex gap-1">
+                <div className="btn-toolbar">
                   {attr.items.map((size) => (
                     <button
                       key={size.id}
-                      className={`btn btn-outline-secondary btn-sm size-option ${
+                      className={`btn btn-outline-dark btn-sm ${
                         selectedValue === size.value ? "active" : ""
                       }`}
+                      style={{
+                        marginRight: "3px",
+                        padding: "2px 6px",
+                        fontSize: "10px", 
+                        height: "25px", 
+                        width: "25px",
+                      }}
                     >
                       {size.value}
                     </button>
                   ))}
                 </div>
               ) : attr.name.toLowerCase() === "color" ? (
-                <div className="btn-toolbar">
+                <div className="btn-toolbar" style={{ paddingLeft: "3px" }}>
                   {attr.items.map((color) => (
                     <button
                       key={color.id}
@@ -87,6 +94,8 @@ class CartOverlay extends Component {
                       style={{
                         backgroundColor: color.value,
                         marginRight: "3px",
+                        height: "22px", 
+                        width: "22px",
                       }}
                     />
                   ))}
@@ -118,33 +127,32 @@ class CartOverlay extends Component {
               {/* Cart Overlay */}
               <div className="position-fixed top-0 end-0 h-50 bg-white shadow-lg cart-overlay">
                 <div className="p-3">
-                  <div className="d-flex justify-content-between align-items-center  pb-2 mb-3">
+                  <div className="d-flex justify-content-between align-items-center pb-2 mb-3">
                     <span className="d-flex align-items-center span-my-bag">
                       <h5 className="m-0 my-bag-text">My Bag,</h5>
                       <h5 className="m-0 items-count">
                         {cart.reduce((sum, item) => sum + item.quantity, 0)}{" "}
                         {cart.length === 1 ? "item" : "items"}
-                      </h5>{" "}
+                      </h5>
                     </span>
                   </div>
                   <div className="mb-2">
                     {cart.map((item) => (
                       <div
                         key={`${item.id}-${JSON.stringify(item.options)}`}
-                        className="d-flex mb-4 align-items-center cart-item"
+                        className="cart-item"
                       >
-                        <div className="flex-grow-1 me-2">
-                          <div className="fw-bold mb-1 text-item-name">{item.name}</div>
+                        <div className="cart-item-text">
+                          <div className="fw-bold mb-1 text-item-name">
+                            {item.name}
+                          </div>
                           <div className="fw-bold mb-2">
                             ${item.price.toFixed(2)}
                           </div>
                           {this.renderOptions(item)}
                         </div>
 
-                        <div
-                          className="d-flex flex-column justify-content-between align-items-center mx-2"
-                          style={{ height: "100%" }}
-                        >
+                        <div className="cart-item-controls">
                           <button
                             className="btn btn-link text-dark p-1 btn-increase"
                             onClick={() =>
@@ -182,11 +190,11 @@ class CartOverlay extends Component {
                           </button>
                         </div>
 
-                        <div className="ms-2">
+                        <div className="cart-item-img-container">
                           <img
                             src={item.gallery[0]}
                             alt={item.name}
-                            className="img-fluid cart-item-img"
+                            className="cart-item-img"
                           />
                         </div>
                       </div>
